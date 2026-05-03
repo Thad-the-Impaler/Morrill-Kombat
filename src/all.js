@@ -360,30 +360,6 @@ const characters = [
   }
 ];
 
-const bojdoChar = { name: 'BOJDO', desc: '???', isBojdo: true };
-const rubbermanChar = { name: 'RUBBERMAN', desc: 'Stretchy striker', isRubberman: true };
-const torrenaChar = { name: 'TORRENA', desc: 'Water phase shifter', isTorrena: true };
-const codemaxChar = { name: 'CODEMAX', desc: 'Holographic swapper', isCodemax: true };
-const haystackChar = { name: 'HAYSTACK', desc: 'Explosive scarecrow', isHaystack: true };
-const snazzChar = { name: 'SNAZZ MCJAZZ', desc: 'Dances to heal', isSnazz: true };
-const duplaireChar = { name: 'DUPLAIRE', desc: 'Strength in numbers', isDuplaire: true };
-const telatrineChar = { name: 'TELATRINE', desc: 'Beyond boundaries', isTelatrine: true };
-const golgarChar = { name: 'GOLGAR', desc: 'Twin soul swapper', isGolgar: true };
-const corvidaChar = { name: 'CORVIDA', desc: 'Blue jay shifter', isCorvida: true };
-const bozollokChar = { name: 'BOZOLLOK', desc: 'Molting insect', isBozollok: true };
-const gourmandChar = { name: 'GOURMAND', desc: 'Ravenous devourer', isGourmand: true };
-const batschChar = { name: 'BATSCH', desc: 'Shell-bound guardian', isBatsch: true };
-const paletapChar = { name: 'PALETAP', desc: 'Towering tremor', isPaletap: true };
-const killawattChar = { name: 'KILLA WATT', desc: 'Surge\'s electric sister', isKillawatt: true };
-const backtrackChar = { name: 'BACKTRACK', desc: 'Time rewinder', isBacktrack: true };
-const exorChar = { name: 'EXOR', desc: 'Life force drainer', isExor: true };
-const buckChar = { name: 'BUCK', desc: 'Patriotic powerhouse', isBuck: true };
-const matadorChar = { name: 'MATADOR', desc: 'Dashing blade', isMatador: true };
-const vorticeChar = { name: 'VORTICE', desc: 'Mistress of wind', isVortice: true };
-const xhaustChar = { name: 'X-HAUST', desc: 'Combustion engine of war', isXhaust: true };
-const dryadChar = { name: 'DRYAD', desc: 'Forest wallmaker', isDryad: true };
-const kavakChar = { name: 'KAVAK', desc: 'The Mercenary', isKavak: true };
-const aetherChar = { name: 'AETHER', desc: 'Crowned of light', isAether: true };
 const arnavChar = {
   name: 'ARNAV',
   color: '#666666',
@@ -427,15 +403,6 @@ const minhChar = {
   isMinh: true
 };
 
-// Fixed order for secret characters (after base roster)
-// Roster is locked to BLAZE + ARTIK — no secret chars available.
-const secretCharOrder = [];
-
-// Locked character hints (code hints, not the actual code)
-const secretCharHints = new Map();
-function insertCharOrdered(char) {
-  // Roster locked to BLAZE + ARTIK — no-op so unlocks can't add anyone.
-}
 const assists = [
   { name: 'KING ROLLER', color: '#bbbbbb', accent: '#ffffff', type: 'Roll Joust', damage: 16, cooldownTime: 360, desc: 'The Superior Backpack', isKingRoller: true },
   { name: 'JAYCE', color: '#7fb8d4', accent: '#ff9933', type: 'Triple Shot', damage: 7, cooldownTime: 420, desc: 'Runs in and fires three shots', isJayce: true }
@@ -460,56 +427,8 @@ function insertAssistOrdered(assist) {
 }
 
 function activateMasterPasskey() {
-  if (!bojdoUnlocked) { bojdoUnlocked = true; insertCharOrdered(bojdoChar); }
-  if (!bojdobojdoUnlocked) {
-    bojdobojdoUnlocked = true;
-    bojdoChar.name = 'BOJDOBOJDO';
-    bojdoChar.desc = 'ULTIMATE SIZE SHIFTER';
-    bojdoChar.accent = '#ff4400';
-  }
-  if (!rubbermanUnlocked) { rubbermanUnlocked = true; insertCharOrdered(rubbermanChar); }
-  if (!torrenaUnlocked) { torrenaUnlocked = true; insertCharOrdered(torrenaChar); }
-  if (!snazzUnlocked) { snazzUnlocked = true; insertCharOrdered(snazzChar); }
-  if (!haystackUnlocked) { haystackUnlocked = true; insertCharOrdered(haystackChar); }
-  if (!codemaxUnlocked) { codemaxUnlocked = true; insertCharOrdered(codemaxChar); }
-  if (!corvidaUnlocked) { corvidaUnlocked = true; insertCharOrdered(corvidaChar); }
-  if (!golgarUnlocked) { golgarUnlocked = true; insertCharOrdered(golgarChar); }
-  if (!telatrineUnlocked) { telatrineUnlocked = true; insertCharOrdered(telatrineChar); }
-  if (!duplaireUnlocked) { duplaireUnlocked = true; insertCharOrdered(duplaireChar); }
-  if (!bozollokUnlocked) { bozollokUnlocked = true; insertCharOrdered(bozollokChar); }
-  if (!gourmandUnlocked) { gourmandUnlocked = true; insertCharOrdered(gourmandChar); }
-  if (!batschUnlocked) { batschUnlocked = true; insertCharOrdered(batschChar); }
-  if (!paletapUnlocked) { paletapUnlocked = true; insertCharOrdered(paletapChar); }
-  if (!matadorUnlocked) { matadorUnlocked = true; insertCharOrdered(matadorChar); }
-  if (!killawattUnlocked) { killawattUnlocked = true; insertCharOrdered(killawattChar); }
-  if (!backtrackUnlocked) { backtrackUnlocked = true; insertCharOrdered(backtrackChar); }
-  if (!exorUnlocked) { exorUnlocked = true; insertCharOrdered(exorChar); }
-  if (!buckUnlocked) { buckUnlocked = true; insertCharOrdered(buckChar); }
-  if (!vorticeUnlocked) { vorticeUnlocked = true; insertCharOrdered(vorticeChar); }
-  if (!xhaustUnlocked) { xhaustUnlocked = true; insertCharOrdered(xhaustChar); }
-  if (!dryadUnlocked) { dryadUnlocked = true; insertCharOrdered(dryadChar); }
-  if (!kavakUnlocked) { kavakUnlocked = true; insertCharOrdered(kavakChar); }
-  if (!aetherUnlocked) { aetherUnlocked = true; insertCharOrdered(aetherChar); }
-  if (!weedthornUnlocked) { weedthornUnlocked = true; insertAssistOrdered(weedthornAssist); }
-  if (!bojAssistUnlocked) { bojAssistUnlocked = true; insertAssistOrdered(bojAssist); }
-  if (!jazzAssistUnlocked) { jazzAssistUnlocked = true; insertAssistOrdered(jazzAssist); }
-  if (!cyanoAssistUnlocked) { cyanoAssistUnlocked = true; insertAssistOrdered(cyanoAssist); }
-  if (!warperAssistUnlocked) { warperAssistUnlocked = true; insertAssistOrdered(warperAssist); }
-  if (!aphidAssistUnlocked) { aphidAssistUnlocked = true; insertAssistOrdered(aphidAssist); }
-  if (!studAssistUnlocked) { studAssistUnlocked = true; insertAssistOrdered(studAssist); }
-  if (!floatAssistUnlocked) { floatAssistUnlocked = true; insertAssistOrdered(floatAssist); }
-  if (!stickerAssistUnlocked) { stickerAssistUnlocked = true; insertAssistOrdered(stickerAssist); }
-  if (!serpentAssistUnlocked) { serpentAssistUnlocked = true; insertAssistOrdered(serpentAssist); }
-  if (!snowyCityUnlocked) { snowyCityUnlocked = true; }
-  if (!foggyCityUnlocked) { foggyCityUnlocked = true; }
-  if (!rainyCityUnlocked) { rainyCityUnlocked = true; }
-  if (!glowingCityUnlocked) { glowingCityUnlocked = true; }
-  if (!sunnyCityUnlocked) { sunnyCityUnlocked = true; }
-  if (!tentUnlocked) { tentUnlocked = true; }
-  if (!dustUnlocked) { dustUnlocked = true; }
-  if (!pulpUnlocked) { pulpUnlocked = true; }
   rumblePracticeUnlocked = true;
-  // Unlock all bosses for practice
+  // Mark all practice-mode bosses as defeated for the boss-select UI.
   for (const boss of practiceBossList) {
     defeatedBosses[boss.name] = true;
   }
@@ -517,7 +436,8 @@ function activateMasterPasskey() {
 }
 
 function isMasterPasskeyNeeded() {
-  return !bojdoUnlocked || !bojdobojdoUnlocked || !rubbermanUnlocked || !torrenaUnlocked || !snazzUnlocked || !haystackUnlocked || !codemaxUnlocked || !corvidaUnlocked || !golgarUnlocked || !telatrineUnlocked || !duplaireUnlocked || !bozollokUnlocked || !gourmandUnlocked || !batschUnlocked || !paletapUnlocked || !matadorUnlocked || !killawattUnlocked || !backtrackUnlocked || !exorUnlocked || !buckUnlocked || !vorticeUnlocked || !xhaustUnlocked || !dryadUnlocked || !kavakUnlocked || !aetherUnlocked || !weedthornUnlocked || !bojAssistUnlocked || !jazzAssistUnlocked || !cyanoAssistUnlocked || !warperAssistUnlocked || !aphidAssistUnlocked || !studAssistUnlocked || !floatAssistUnlocked || !stickerAssistUnlocked || !serpentAssistUnlocked || !snowyCityUnlocked || !foggyCityUnlocked || !rainyCityUnlocked || !glowingCityUnlocked || !sunnyCityUnlocked || !tentUnlocked || !dustUnlocked || !pulpUnlocked;
+  return !rumblePracticeUnlocked
+      || practiceBossList.some(b => !defeatedBosses[b.name]);
 }
 // --- ATTACKS ---
 const attacks = {
@@ -1037,7 +957,6 @@ let charSelectLastCursor = -1;
 let charSelectPerRow = 7; // updated by drawCharSelectScreen
 let cpuSelectCursor = 1;
 let selectingCPU = false;
-let showLockedChars = false;
 let assistCursor = 0;
 let selectingCPUAssist = false;
 let cpuAssistCursor = 0;
@@ -1300,82 +1219,9 @@ function resetRumbleState() {
   rumbleAetherPhase = 0; rumbleAetherChainT = 0; rumbleAetherLaserT = 0; rumbleAetherCharFade = 1;
   rumbleAetherFireballs = []; rumbleAetherImpacts = []; rumbleAetherSmoke = []; rumbleAetherSparks = [];
 }
-let bojdoUnlocked = false;
-let bojdobojdoUnlocked = false;
-let bojdoCodeBuffer = '';
-let bojdoUnlockFlash = 0;
-let rubbermanUnlocked = false;
-let rubbermanCodeBuffer = '';
-let rubbermanUnlockFlash = 0;
-let torrenaUnlocked = false;
-let torrenaCodeBuffer = '';
-let torrenaUnlockFlash = 0;
 let masterCodeBuffer = '';
 let masterUnlockFlash = 0;
 let rumblePracticeUnlocked = false; // unlocked after first rumble or master passkey
-let snazzUnlocked = false;
-let snazzCodeBuffer = '';
-let snazzUnlockFlash = 0;
-let haystackUnlocked = false;
-let haystackCodeBuffer = '';
-let haystackUnlockFlash = 0;
-let codemaxUnlocked = false;
-let codemaxCodeBuffer = '';
-let codemaxUnlockFlash = 0;
-let corvidaUnlocked = false;
-let corvidaCodeBuffer = '';
-let corvidaUnlockFlash = 0;
-let golgarUnlocked = false;
-let golgarCodeBuffer = '';
-let golgarUnlockFlash = 0;
-let telatrineUnlocked = false;
-let telatrineCodeBuffer = '';
-let telatrineUnlockFlash = 0;
-let duplaireUnlocked = false;
-let duplaireCodeBuffer = '';
-let duplaireUnlockFlash = 0;
-let bozollokUnlocked = false;
-let bozollokCodeBuffer = '';
-let bozollokUnlockFlash = 0;
-let gourmandUnlocked = false;
-let gourmandCodeBuffer = '';
-let gourmandUnlockFlash = 0;
-let batschUnlocked = false;
-let batschCodeBuffer = '';
-let batschUnlockFlash = 0;
-let paletapUnlocked = false;
-let paletapCodeBuffer = '';
-let paletapUnlockFlash = 0;
-let matadorUnlocked = false;
-let matadorCodeBuffer = '';
-let matadorUnlockFlash = 0;
-let killawattUnlocked = false;
-let killawattCodeBuffer = '';
-let killawattUnlockFlash = 0;
-let backtrackUnlocked = false;
-let backtrackCodeBuffer = '';
-let backtrackUnlockFlash = 0;
-let exorUnlocked = false;
-let exorCodeBuffer = '';
-let exorUnlockFlash = 0;
-let buckUnlocked = false;
-let buckCodeBuffer = '';
-let buckUnlockFlash = 0;
-let vorticeUnlocked = false;
-let vorticeCodeBuffer = '';
-let vorticeUnlockFlash = 0;
-let xhaustUnlocked = false;
-let xhaustCodeBuffer = '';
-let xhaustUnlockFlash = 0;
-let dryadUnlocked = false;
-let dryadCodeBuffer = '';
-let dryadUnlockFlash = 0;
-let kavakUnlocked = false;
-let kavakCodeBuffer = '';
-let kavakUnlockFlash = 0;
-let aetherUnlocked = false;
-let aetherCodeBuffer = '';
-let aetherUnlockFlash = 0;
 let weedthornUnlocked = false;
 let weedthornCodeBuffer = '';
 let weedthornUnlockFlash = 0;
@@ -2521,50 +2367,6 @@ function drawTitleScreen() {
   }
 }
 
-function drawLockedCharPreview(char, x, y, size) {
-  const s = size;
-  ctx.save();
-  ctx.translate(x, y);
-
-  // Card background - darker than normal
-  ctx.fillStyle = '#0a0a15';
-  ctx.fillRect(-s/2 - 5, -s - 15, s + 10, s + 35);
-  ctx.strokeStyle = '#222';
-  ctx.lineWidth = 1;
-  ctx.strokeRect(-s/2 - 5, -s - 15, s + 10, s + 35);
-
-  // Black silhouette - generic fighter shape
-  const sc = s / 100;
-  ctx.save();
-  ctx.scale(sc, sc);
-  ctx.fillStyle = '#111';
-  // Head
-  ctx.beginPath(); ctx.arc(0, -100 + 22, 14, 0, Math.PI * 2); ctx.fill();
-  // Body
-  ctx.fillRect(-12, -100 + 30, 24, 30);
-  // Arms
-  ctx.fillRect(-22, -100 + 32, 12, 6);
-  ctx.fillRect(10, -100 + 32, 12, 6);
-  // Legs
-  ctx.fillRect(-10, -100 + 58, 8, 20);
-  ctx.fillRect(2, -100 + 58, 8, 20);
-  ctx.restore();
-
-  // ??? name
-  ctx.font = `bold ${Math.max(10, s * 0.18)}px Arial`;
-  ctx.fillStyle = '#444';
-  ctx.textAlign = 'center';
-  ctx.fillText('???', 0, s * 0.12);
-
-  // Hint text
-  const hint = secretCharHints.get(char) || '...';
-  ctx.font = `${Math.max(7, s * 0.11)}px Arial`;
-  ctx.fillStyle = '#333';
-  ctx.fillText(hint, 0, s * 0.26);
-
-  ctx.restore();
-}
-
 function drawCharacterPreview(char, x, y, size, selected, label) {
   const s = size;
   ctx.save();
@@ -3021,9 +2823,8 @@ function drawCharSelectScreen() {
   ctx.fillStyle = '#000000';
   ctx.fillRect(0, 0, 960, 540);
 
-  // Build display list: unlocked chars + locked silhouettes (when toggled) + RANDOM
-  const lockedChars = showLockedChars ? secretCharOrder.filter(c => !characters.includes(c)) : [];
-  const displaySlots = characters.length + lockedChars.length + 1; // +1 for RANDOM
+  // Build display list: unlocked chars + RANDOM
+  const displaySlots = characters.length + 1; // +1 for RANDOM
 
   // Character cards (including RANDOM) - adaptive full-width grid layout
   const charSlots = characters.length + 1; // selectable slots (for cursor)
@@ -3119,10 +2920,9 @@ function drawCharSelectScreen() {
     ctx.fillText('Now select CPU opponent', 480, manyChars ? 52 : 80);
   }
 
-  // Build display order: unlocked chars, then locked chars, then RANDOM
+  // Build display order: unlocked chars, then RANDOM
   const displayList = [];
   for (let i = 0; i < characters.length; i++) displayList.push({ type: 'char', char: characters[i], selectIdx: i });
-  for (let i = 0; i < lockedChars.length; i++) displayList.push({ type: 'locked', char: lockedChars[i] });
   displayList.push({ type: 'random', selectIdx: characters.length });
 
   // Character cards
@@ -3135,9 +2935,7 @@ function drawCharSelectScreen() {
     const y = gridStartY + row * rowHeight;
     const item = displayList[i];
 
-    if (item.type === 'locked') {
-      drawLockedCharPreview(item.char, x, y, cardSize);
-    } else {
+    {
       let label = null;
       let isSelected = false;
       const si = item.selectIdx;
@@ -3337,309 +3135,6 @@ function drawCharSelectScreen() {
     ctx.fill();
   }
 
-  // Bojdo unlock flash
-  if (bojdoUnlockFlash > 0) {
-    bojdoUnlockFlash--;
-    ctx.save();
-    ctx.globalAlpha = bojdoUnlockFlash / 60 * 0.6;
-    ctx.fillStyle = '#ffcc00';
-    ctx.fillRect(0, 0, 960, 540);
-    ctx.globalAlpha = Math.min(1, bojdoUnlockFlash / 30);
-    ctx.font = 'bold 48px Arial';
-    ctx.textAlign = 'center';
-    ctx.fillStyle = '#000';
-    ctx.fillText(bojdobojdoUnlocked ? 'BOJDOBOJDO AWAKENED' : 'CHALLENGER UNLOCKED', 480, 270);
-    ctx.restore();
-  }
-
-  // Rubberman unlock flash
-  if (rubbermanUnlockFlash > 0) {
-    rubbermanUnlockFlash--;
-    ctx.save();
-    ctx.globalAlpha = rubbermanUnlockFlash / 60 * 0.6;
-    ctx.fillStyle = '#ff4400';
-    ctx.fillRect(0, 0, 960, 540);
-    ctx.globalAlpha = Math.min(1, rubbermanUnlockFlash / 30);
-    ctx.font = 'bold 48px Arial';
-    ctx.textAlign = 'center';
-    ctx.fillStyle = '#fff';
-    ctx.fillText('CHALLENGER UNLOCKED', 480, 270);
-    ctx.restore();
-  }
-
-  // Torrena unlock flash
-  if (torrenaUnlockFlash > 0) {
-    torrenaUnlockFlash--;
-    ctx.save();
-    ctx.globalAlpha = torrenaUnlockFlash / 60 * 0.6;
-    ctx.fillStyle = '#44ddff';
-    ctx.fillRect(0, 0, 960, 540);
-    ctx.globalAlpha = Math.min(1, torrenaUnlockFlash / 30);
-    ctx.font = 'bold 48px Arial';
-    ctx.textAlign = 'center';
-    ctx.fillStyle = '#000';
-    ctx.fillText('CHALLENGER UNLOCKED', 480, 270);
-    ctx.restore();
-  }
-
-  // Snazz McJazz unlock flash
-  if (snazzUnlockFlash > 0) {
-    snazzUnlockFlash--;
-    ctx.save();
-    ctx.globalAlpha = snazzUnlockFlash / 60 * 0.6;
-    ctx.fillStyle = '#ff00ff';
-    ctx.fillRect(0, 0, 960, 540);
-    ctx.globalAlpha = Math.min(1, snazzUnlockFlash / 30);
-    ctx.font = 'bold 48px Arial';
-    ctx.textAlign = 'center';
-    ctx.fillStyle = '#fff';
-    ctx.fillText('CHALLENGER UNLOCKED', 480, 270);
-    ctx.restore();
-  }
-
-  // Haystack unlock flash
-  if (haystackUnlockFlash > 0) {
-    haystackUnlockFlash--;
-    ctx.save();
-    ctx.globalAlpha = haystackUnlockFlash / 60 * 0.6;
-    ctx.fillStyle = '#c4a35a';
-    ctx.fillRect(0, 0, 960, 540);
-    ctx.globalAlpha = Math.min(1, haystackUnlockFlash / 30);
-    ctx.font = 'bold 48px Arial';
-    ctx.textAlign = 'center';
-    ctx.fillStyle = '#000';
-    ctx.fillText('CHALLENGER UNLOCKED', 480, 270);
-    ctx.restore();
-  }
-
-  // Codemax unlock flash
-  if (codemaxUnlockFlash > 0) {
-    codemaxUnlockFlash--;
-    ctx.save();
-    ctx.globalAlpha = codemaxUnlockFlash / 60 * 0.6;
-    ctx.fillStyle = '#00ff88';
-    ctx.fillRect(0, 0, 960, 540);
-    ctx.globalAlpha = Math.min(1, codemaxUnlockFlash / 30);
-    ctx.font = 'bold 48px Arial';
-    ctx.textAlign = 'center';
-    ctx.fillStyle = '#000';
-    ctx.fillText('CHALLENGER UNLOCKED', 480, 270);
-    ctx.restore();
-  }
-
-  // Telatrine unlock flash
-  if (telatrineUnlockFlash > 0) {
-    telatrineUnlockFlash--;
-    ctx.save();
-    ctx.globalAlpha = telatrineUnlockFlash / 60 * 0.6;
-    ctx.fillStyle = '#b366ff';
-    ctx.fillRect(0, 0, 960, 540);
-    ctx.globalAlpha = Math.min(1, telatrineUnlockFlash / 30);
-    ctx.font = 'bold 48px Arial';
-    ctx.textAlign = 'center';
-    ctx.fillStyle = '#fff';
-    ctx.fillText('CHALLENGER UNLOCKED', 480, 270);
-    ctx.restore();
-  }
-
-  // Golgar unlock flash
-  if (golgarUnlockFlash > 0) {
-    golgarUnlockFlash--;
-    ctx.save();
-    ctx.globalAlpha = golgarUnlockFlash / 60 * 0.6;
-    ctx.fillStyle = '#8b7ec8';
-    ctx.fillRect(0, 0, 960, 540);
-    ctx.globalAlpha = Math.min(1, golgarUnlockFlash / 30);
-    ctx.font = 'bold 48px Arial';
-    ctx.textAlign = 'center';
-    ctx.fillStyle = '#fff';
-    ctx.fillText('CHALLENGER UNLOCKED', 480, 270);
-    ctx.restore();
-  }
-
-  // Corvida unlock flash
-  if (corvidaUnlockFlash > 0) {
-    corvidaUnlockFlash--;
-    ctx.save();
-    ctx.globalAlpha = corvidaUnlockFlash / 60 * 0.6;
-    ctx.fillStyle = '#4a90d9';
-    ctx.fillRect(0, 0, 960, 540);
-    ctx.globalAlpha = Math.min(1, corvidaUnlockFlash / 30);
-    ctx.font = 'bold 48px Arial';
-    ctx.textAlign = 'center';
-    ctx.fillStyle = '#fff';
-    ctx.fillText('CHALLENGER UNLOCKED', 480, 270);
-    ctx.restore();
-  }
-
-  // Duplaire unlock flash
-  if (duplaireUnlockFlash > 0) {
-    duplaireUnlockFlash--;
-    ctx.save();
-    ctx.globalAlpha = duplaireUnlockFlash / 60 * 0.6;
-    ctx.fillStyle = '#8bcc66';
-    ctx.fillRect(0, 0, 960, 540);
-    ctx.globalAlpha = Math.min(1, duplaireUnlockFlash / 30);
-    ctx.font = 'bold 48px Arial';
-    ctx.textAlign = 'center';
-    ctx.fillStyle = '#000';
-    ctx.fillText('CHALLENGER UNLOCKED', 480, 270);
-    ctx.restore();
-  }
-
-  // Bozollok unlock flash
-  if (bozollokUnlockFlash > 0) {
-    bozollokUnlockFlash--;
-    ctx.save();
-    ctx.globalAlpha = bozollokUnlockFlash / 60 * 0.6;
-    ctx.fillStyle = '#c8a030';
-    ctx.fillRect(0, 0, 960, 540);
-    ctx.globalAlpha = Math.min(1, bozollokUnlockFlash / 30);
-    ctx.font = 'bold 48px Arial';
-    ctx.textAlign = 'center';
-    ctx.fillStyle = '#000';
-    ctx.fillText('CHALLENGER UNLOCKED', 480, 270);
-    ctx.restore();
-  }
-
-  // Gourmand unlock flash
-  if (gourmandUnlockFlash > 0) {
-    gourmandUnlockFlash--;
-    ctx.save();
-    ctx.globalAlpha = gourmandUnlockFlash / 60 * 0.6;
-    ctx.fillStyle = '#e8a852';
-    ctx.fillRect(0, 0, 960, 540);
-    ctx.globalAlpha = Math.min(1, gourmandUnlockFlash / 30);
-    ctx.font = 'bold 48px Arial';
-    ctx.textAlign = 'center';
-    ctx.fillStyle = '#000';
-    ctx.fillText('CHALLENGER UNLOCKED', 480, 270);
-    ctx.restore();
-  }
-
-  if (batschUnlockFlash > 0) {
-    batschUnlockFlash--;
-    ctx.save();
-    ctx.globalAlpha = batschUnlockFlash / 60 * 0.6;
-    ctx.fillStyle = '#c4a55a';
-    ctx.fillRect(0, 0, 960, 540);
-    ctx.globalAlpha = Math.min(1, batschUnlockFlash / 30);
-    ctx.font = 'bold 48px Arial';
-    ctx.textAlign = 'center';
-    ctx.fillStyle = '#000';
-    ctx.fillText('CHALLENGER UNLOCKED', 480, 270);
-    ctx.restore();
-  }
-
-  if (paletapUnlockFlash > 0) {
-    paletapUnlockFlash--;
-    ctx.save();
-    ctx.globalAlpha = paletapUnlockFlash / 60 * 0.6;
-    ctx.fillStyle = '#f0f0f0';
-    ctx.fillRect(0, 0, 960, 540);
-    ctx.globalAlpha = Math.min(1, paletapUnlockFlash / 30);
-    ctx.font = 'bold 48px Arial';
-    ctx.textAlign = 'center';
-    ctx.fillStyle = '#000';
-    ctx.fillText('CHALLENGER UNLOCKED', 480, 270);
-    ctx.restore();
-  }
-
-  if (matadorUnlockFlash > 0) {
-    matadorUnlockFlash--;
-    ctx.save();
-    ctx.globalAlpha = matadorUnlockFlash / 60 * 0.6;
-    ctx.fillStyle = '#ff2222';
-    ctx.fillRect(0, 0, 960, 540);
-    ctx.globalAlpha = Math.min(1, matadorUnlockFlash / 30);
-    ctx.font = 'bold 48px Arial';
-    ctx.textAlign = 'center';
-    ctx.fillStyle = '#000';
-    ctx.fillText('CHALLENGER UNLOCKED', 480, 270);
-    ctx.restore();
-  }
-
-  if (killawattUnlockFlash > 0) {
-    killawattUnlockFlash--;
-    ctx.save();
-    ctx.globalAlpha = killawattUnlockFlash / 60 * 0.6;
-    ctx.fillStyle = '#00e5ff';
-    ctx.fillRect(0, 0, 960, 540);
-    ctx.globalAlpha = Math.min(1, killawattUnlockFlash / 30);
-    ctx.font = 'bold 48px Arial';
-    ctx.textAlign = 'center';
-    ctx.fillStyle = '#000';
-    ctx.fillText('CHALLENGER UNLOCKED', 480, 270);
-    ctx.restore();
-  }
-
-  if (backtrackUnlockFlash > 0) {
-    backtrackUnlockFlash--;
-    ctx.save();
-    ctx.globalAlpha = backtrackUnlockFlash / 60 * 0.6;
-    ctx.fillStyle = '#b44dff';
-    ctx.fillRect(0, 0, 960, 540);
-    ctx.globalAlpha = Math.min(1, backtrackUnlockFlash / 30);
-    ctx.font = 'bold 48px Arial';
-    ctx.textAlign = 'center';
-    ctx.fillStyle = '#000';
-    ctx.fillText('CHALLENGER UNLOCKED', 480, 270);
-    ctx.restore();
-  }
-
-  if (exorUnlockFlash > 0) {
-    exorUnlockFlash--;
-    ctx.save();
-    ctx.globalAlpha = exorUnlockFlash / 60 * 0.6;
-    ctx.fillStyle = '#39ff14';
-    ctx.fillRect(0, 0, 960, 540);
-    ctx.globalAlpha = Math.min(1, exorUnlockFlash / 30);
-    ctx.font = 'bold 48px Arial';
-    ctx.textAlign = 'center';
-    ctx.fillStyle = '#000';
-    ctx.fillText('CHALLENGER UNLOCKED', 480, 270);
-    ctx.restore();
-  }
-
-  if (buckUnlockFlash > 0) {
-    buckUnlockFlash--;
-    ctx.save();
-    ctx.globalAlpha = buckUnlockFlash / 60 * 0.6;
-    ctx.fillStyle = '#cc0000';
-    ctx.fillRect(0, 0, 960, 540);
-    ctx.globalAlpha = Math.min(1, buckUnlockFlash / 30);
-    ctx.font = 'bold 48px Arial';
-    ctx.textAlign = 'center';
-    ctx.fillStyle = '#fff';
-    ctx.fillText('CHALLENGER UNLOCKED', 480, 270);
-    ctx.restore();
-  }
-  if (vorticeUnlockFlash > 0) {
-    vorticeUnlockFlash--;
-    ctx.save();
-    ctx.globalAlpha = vorticeUnlockFlash / 60 * 0.6;
-    ctx.fillStyle = '#4a6a5a';
-    ctx.fillRect(0, 0, 960, 540);
-    ctx.globalAlpha = Math.min(1, vorticeUnlockFlash / 30);
-    ctx.font = 'bold 48px Arial';
-    ctx.textAlign = 'center';
-    ctx.fillStyle = '#fff';
-    ctx.fillText('CHALLENGER UNLOCKED', 480, 270);
-    ctx.restore();
-  }
-  if (xhaustUnlockFlash > 0) {
-    xhaustUnlockFlash--;
-    ctx.save();
-    ctx.globalAlpha = xhaustUnlockFlash / 60 * 0.6;
-    ctx.fillStyle = '#5a5a5a';
-    ctx.fillRect(0, 0, 960, 540);
-    ctx.globalAlpha = Math.min(1, xhaustUnlockFlash / 30);
-    ctx.font = 'bold 48px Arial';
-    ctx.textAlign = 'center';
-    ctx.fillStyle = '#fff';
-    ctx.fillText('CHALLENGER UNLOCKED', 480, 270);
-    ctx.restore();
-  }
 
   // Master passkey flash
   if (masterUnlockFlash > 0) {
@@ -22836,272 +22331,6 @@ function handleKeyPress(key, isRepeat) {
     }
 
     case 'charSelect': {
-      // Toggle locked character display
-      if (key === 'Tab') {
-        showLockedChars = !showLockedChars;
-        charSelectScroll = 0;
-      }
-      // Secret code: type b0jd0 to unlock Bojdo, type again for Bojdobojdo
-      if (!bojdoUnlocked || !bojdobojdoUnlocked) {
-        bojdoCodeBuffer += key;
-        if (bojdoCodeBuffer.length > 10) bojdoCodeBuffer = bojdoCodeBuffer.slice(-10);
-        if (bojdoCodeBuffer.includes('b0jd0')) {
-          bojdoCodeBuffer = '';
-          if (!bojdoUnlocked) {
-            bojdoUnlocked = true;
-            insertCharOrdered(bojdoChar);
-            bojdoUnlockFlash = 60;
-            charSelectCursor = characters.length - 1;
-          } else if (!bojdobojdoUnlocked) {
-            bojdobojdoUnlocked = true;
-            bojdoChar.name = 'BOJDOBOJDO';
-            bojdoChar.desc = 'ULTIMATE SIZE SHIFTER';
-            bojdoChar.accent = '#ff4400';
-            bojdoUnlockFlash = 60;
-            // Jump to Bojdobojdo
-            charSelectCursor = characters.indexOf(bojdoChar);
-          }
-        }
-      }
-      // Secret code: type rubbr to unlock Rubberman
-      if (!rubbermanUnlocked) {
-        rubbermanCodeBuffer += key.toLowerCase();
-        if (rubbermanCodeBuffer.length > 10) rubbermanCodeBuffer = rubbermanCodeBuffer.slice(-10);
-        if (rubbermanCodeBuffer.includes('rubbr')) {
-          rubbermanCodeBuffer = '';
-          rubbermanUnlocked = true;
-          insertCharOrdered(rubbermanChar);
-          rubbermanUnlockFlash = 60;
-          charSelectCursor = characters.length - 1;
-        }
-      }
-      // Secret code: type fl00d to unlock Torrena
-      if (!torrenaUnlocked) {
-        torrenaCodeBuffer += key.toLowerCase();
-        if (torrenaCodeBuffer.length > 10) torrenaCodeBuffer = torrenaCodeBuffer.slice(-10);
-        if (torrenaCodeBuffer.includes('fl00d')) {
-          torrenaCodeBuffer = '';
-          torrenaUnlocked = true;
-          insertCharOrdered(torrenaChar);
-          torrenaUnlockFlash = 60;
-          charSelectCursor = characters.length - 1;
-        }
-      }
-      // Secret code: type 5na22 to unlock Snazz McJazz
-      if (!snazzUnlocked) {
-        snazzCodeBuffer += key.toLowerCase();
-        if (snazzCodeBuffer.length > 10) snazzCodeBuffer = snazzCodeBuffer.slice(-10);
-        if (snazzCodeBuffer.includes('5na22')) {
-          snazzCodeBuffer = '';
-          snazzUnlocked = true;
-          insertCharOrdered(snazzChar);
-          snazzUnlockFlash = 60;
-          charSelectCursor = characters.length - 1;
-        }
-      }
-      // Secret code: type dumm1 to unlock Haystack
-      if (!haystackUnlocked) {
-        haystackCodeBuffer += key.toLowerCase();
-        if (haystackCodeBuffer.length > 10) haystackCodeBuffer = haystackCodeBuffer.slice(-10);
-        if (haystackCodeBuffer.includes('dumm1')) {
-          haystackCodeBuffer = '';
-          haystackUnlocked = true;
-          insertCharOrdered(haystackChar);
-          haystackUnlockFlash = 60;
-          charSelectCursor = characters.length - 1;
-        }
-      }
-      // Secret code: type 404er to unlock Codemax
-      if (!codemaxUnlocked) {
-        codemaxCodeBuffer += key.toLowerCase();
-        if (codemaxCodeBuffer.length > 10) codemaxCodeBuffer = codemaxCodeBuffer.slice(-10);
-        if (codemaxCodeBuffer.includes('404er')) {
-          codemaxCodeBuffer = '';
-          codemaxUnlocked = true;
-          insertCharOrdered(codemaxChar);
-          codemaxUnlockFlash = 60;
-          charSelectCursor = characters.length - 1;
-        }
-      }
-      // Secret code: type v0id1 to unlock Telatrine
-      if (!telatrineUnlocked) {
-        telatrineCodeBuffer += key.toLowerCase();
-        if (telatrineCodeBuffer.length > 10) telatrineCodeBuffer = telatrineCodeBuffer.slice(-10);
-        if (telatrineCodeBuffer.includes('v0id1')) {
-          telatrineCodeBuffer = '';
-          telatrineUnlocked = true;
-          insertCharOrdered(telatrineChar);
-          telatrineUnlockFlash = 60;
-          charSelectCursor = characters.length - 1;
-        }
-      }
-      // Secret code: type g0yl3 to unlock Golgar
-      if (!golgarUnlocked) {
-        golgarCodeBuffer += key.toLowerCase();
-        if (golgarCodeBuffer.length > 10) golgarCodeBuffer = golgarCodeBuffer.slice(-10);
-        if (golgarCodeBuffer.includes('g0yl3')) {
-          golgarCodeBuffer = '';
-          golgarUnlocked = true;
-          insertCharOrdered(golgarChar);
-          golgarUnlockFlash = 60;
-          charSelectCursor = characters.length - 1;
-        }
-      }
-      // Secret code: type f3thr to unlock Corvida
-      if (!corvidaUnlocked) {
-        corvidaCodeBuffer += key.toLowerCase();
-        if (corvidaCodeBuffer.length > 10) corvidaCodeBuffer = corvidaCodeBuffer.slice(-10);
-        if (corvidaCodeBuffer.includes('f3thr')) {
-          corvidaCodeBuffer = '';
-          corvidaUnlocked = true;
-          insertCharOrdered(corvidaChar);
-          corvidaUnlockFlash = 60;
-          charSelectCursor = characters.length - 1;
-        }
-      }
-      // Secret code: type mult1 to unlock Duplaire
-      if (!duplaireUnlocked) {
-        duplaireCodeBuffer += key.toLowerCase();
-        if (duplaireCodeBuffer.length > 10) duplaireCodeBuffer = duplaireCodeBuffer.slice(-10);
-        if (duplaireCodeBuffer.includes('mult1')) {
-          duplaireCodeBuffer = '';
-          duplaireUnlocked = true;
-          insertCharOrdered(duplaireChar);
-          duplaireUnlockFlash = 60;
-          charSelectCursor = characters.length - 1;
-        }
-      }
-      // Secret code: type m0ltr to unlock Bozollok
-      if (!bozollokUnlocked) {
-        bozollokCodeBuffer += key.toLowerCase();
-        if (bozollokCodeBuffer.length > 10) bozollokCodeBuffer = bozollokCodeBuffer.slice(-10);
-        if (bozollokCodeBuffer.includes('m0ltr')) {
-          bozollokCodeBuffer = '';
-          bozollokUnlocked = true;
-          insertCharOrdered(bozollokChar);
-          bozollokUnlockFlash = 60;
-          charSelectCursor = characters.length - 1;
-        }
-      }
-      // Secret code: type fea5t to unlock Gourmand
-      if (!gourmandUnlocked) {
-        gourmandCodeBuffer += key.toLowerCase();
-        if (gourmandCodeBuffer.length > 10) gourmandCodeBuffer = gourmandCodeBuffer.slice(-10);
-        if (gourmandCodeBuffer.includes('fea5t')) {
-          gourmandCodeBuffer = '';
-          gourmandUnlocked = true;
-          insertCharOrdered(gourmandChar);
-          gourmandUnlockFlash = 60;
-          charSelectCursor = characters.length - 1;
-        }
-      }
-      // Secret code: type sh3ll to unlock Batsch
-      if (!batschUnlocked) {
-        batschCodeBuffer += key.toLowerCase();
-        if (batschCodeBuffer.length > 10) batschCodeBuffer = batschCodeBuffer.slice(-10);
-        if (batschCodeBuffer.includes('sh3ll')) {
-          batschCodeBuffer = '';
-          batschUnlocked = true;
-          insertCharOrdered(batschChar);
-          batschUnlockFlash = 60;
-          charSelectCursor = characters.length - 1;
-        }
-      }
-      // Secret code: type r8ttl to unlock Paletap
-      if (!paletapUnlocked) {
-        paletapCodeBuffer += key.toLowerCase();
-        if (paletapCodeBuffer.length > 10) paletapCodeBuffer = paletapCodeBuffer.slice(-10);
-        if (paletapCodeBuffer.includes('r8ttl')) {
-          paletapCodeBuffer = '';
-          paletapUnlocked = true;
-          insertCharOrdered(paletapChar);
-          paletapUnlockFlash = 60;
-          charSelectCursor = characters.length - 1;
-        }
-      }
-      if (!matadorUnlocked) {
-        matadorCodeBuffer += key.toUpperCase();
-        if (matadorCodeBuffer.length > 10) matadorCodeBuffer = matadorCodeBuffer.slice(-10);
-        if (matadorCodeBuffer.includes('8LFTR')) {
-          matadorCodeBuffer = '';
-          matadorUnlocked = true;
-          insertCharOrdered(matadorChar);
-          matadorUnlockFlash = 60;
-          charSelectCursor = characters.length - 1;
-        }
-      }
-      // Secret code: type V0LTG to unlock Killa Watt
-      if (!killawattUnlocked) {
-        killawattCodeBuffer += key.toUpperCase();
-        if (killawattCodeBuffer.length > 10) killawattCodeBuffer = killawattCodeBuffer.slice(-10);
-        if (killawattCodeBuffer.includes('V0LTG')) {
-          killawattCodeBuffer = '';
-          killawattUnlocked = true;
-          insertCharOrdered(killawattChar);
-          killawattUnlockFlash = 60;
-          charSelectCursor = characters.length - 1;
-        }
-      }
-      // Secret code: type R3WND to unlock Backtrack
-      if (!backtrackUnlocked) {
-        backtrackCodeBuffer += key.toUpperCase();
-        if (backtrackCodeBuffer.length > 10) backtrackCodeBuffer = backtrackCodeBuffer.slice(-10);
-        if (backtrackCodeBuffer.includes('R3WND')) {
-          backtrackCodeBuffer = '';
-          backtrackUnlocked = true;
-          insertCharOrdered(backtrackChar);
-          backtrackUnlockFlash = 60;
-          charSelectCursor = characters.length - 1;
-        }
-      }
-      // Secret code: type 2R3AP to unlock Exor
-      if (!exorUnlocked) {
-        exorCodeBuffer += key.toUpperCase();
-        if (exorCodeBuffer.length > 10) exorCodeBuffer = exorCodeBuffer.slice(-10);
-        if (exorCodeBuffer.includes('2R3AP')) {
-          exorCodeBuffer = '';
-          exorUnlocked = true;
-          insertCharOrdered(exorChar);
-          exorUnlockFlash = 60;
-          charSelectCursor = characters.length - 1;
-        }
-      }
-      // Secret code: type 07/04 to unlock Buck
-      if (!buckUnlocked) {
-        buckCodeBuffer += key;
-        if (buckCodeBuffer.length > 10) buckCodeBuffer = buckCodeBuffer.slice(-10);
-        if (buckCodeBuffer.includes('07/04')) {
-          buckCodeBuffer = '';
-          buckUnlocked = true;
-          insertCharOrdered(buckChar);
-          buckUnlockFlash = 60;
-          charSelectCursor = characters.length - 1;
-        }
-      }
-      // Secret code: type WH1RL to unlock Vortice
-      if (!vorticeUnlocked) {
-        vorticeCodeBuffer += key.toUpperCase();
-        if (vorticeCodeBuffer.length > 10) vorticeCodeBuffer = vorticeCodeBuffer.slice(-10);
-        if (vorticeCodeBuffer.includes('WH1RL')) {
-          vorticeCodeBuffer = '';
-          vorticeUnlocked = true;
-          insertCharOrdered(vorticeChar);
-          vorticeUnlockFlash = 60;
-          charSelectCursor = characters.length - 1;
-        }
-      }
-      // Secret code: type D1ESL to unlock X-haust
-      if (!xhaustUnlocked) {
-        xhaustCodeBuffer += key.toUpperCase();
-        if (xhaustCodeBuffer.length > 10) xhaustCodeBuffer = xhaustCodeBuffer.slice(-10);
-        if (xhaustCodeBuffer.includes('D1ESL')) {
-          xhaustCodeBuffer = '';
-          xhaustUnlocked = true;
-          insertCharOrdered(xhaustChar);
-          xhaustUnlockFlash = 60;
-          charSelectCursor = characters.length - 1;
-        }
-      }
       // Master passkey: type imp11 to unlock all secrets
       if (isMasterPasskeyNeeded()) {
         masterCodeBuffer += key.toLowerCase();
@@ -23895,8 +23124,7 @@ function setupCampaignFight(index) {
 
   // Resolve opponent
   if (typeof fight.opponent === 'string') {
-    selectedCPU = characters.find(c => c.name === fight.opponent)
-      || secretCharOrder.find(c => c.name === fight.opponent);
+    selectedCPU = characters.find(c => c.name === fight.opponent);
   } else {
     selectedCPU = fight.opponent; // boss or special character object
   }

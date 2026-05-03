@@ -1911,53 +1911,15 @@ fightMusic.loop = true;
 
 const templeFightMusic = new Audio('Assets/Music/templeFightMusic.mp3');
 templeFightMusic.loop = true;
-const peakFightMusic = new Audio('Assets/Music/peakFightMusic.mp3');
-peakFightMusic.loop = true;
-const denFightMusic = new Audio('Assets/Music/denFightMusic.mp3');
-denFightMusic.loop = true;
-const voidFightMusic = new Audio('Assets/Music/voidFightMusic.mp3');
-voidFightMusic.loop = true;
-const snowyCityFightMusic = new Audio('Assets/Music/snowyCityFightMusic.mp3');
-snowyCityFightMusic.loop = true;
-const foggyCityFightMusic = new Audio('Assets/Music/foggyCityFightMusic.mp3');
-foggyCityFightMusic.loop = true;
-const rainyCityFightMusic = new Audio('Assets/Music/rainyCityFightMusic.mp3');
-rainyCityFightMusic.loop = true;
-const glowingCityFightMusic = new Audio('Assets/Music/glowingCityFightMusic.mp3');
-glowingCityFightMusic.loop = true;
-const sunnyCityFightMusic = new Audio('Assets/Music/sunnyCityFightMusic.mp3');
-sunnyCityFightMusic.loop = true;
 
-const theCountMusic = new Audio('Assets/Music/theCountMusic.mp3');
-theCountMusic.loop = true;
-
-const pulpFightMusic = new Audio('Assets/Music/pulpFightMusic.mp3');
-pulpFightMusic.loop = true;
-pulpFightMusic.volume = 0.3;
-
-const tentFightMusic = new Audio('Assets/Music/tentFightMusic.mp3');
-tentFightMusic.loop = true;
-tentFightMusic.volume = 0.3;
-
+// Stage -> background music. Falls back to fightMusic for unmapped stages.
 const levelMusicMap = {
   'CLASSIC': fightMusic,
   'THE TEMPLE': templeFightMusic,
-  'THE PEAK': peakFightMusic,
-  'THE DEN': denFightMusic,
-  'THE VOID': voidFightMusic,
-  'SNOWY CITY': snowyCityFightMusic,
-  'FOGGY CITY': foggyCityFightMusic,
-  'RAINY CITY': rainyCityFightMusic,
-  'GLOWING CITY': glowingCityFightMusic,
-  'SUNNY CITY': sunnyCityFightMusic,
-  'THE DUST': titleMusic,
-  'THE COUNT': theCountMusic,
-  'THE TENT': tentFightMusic,
-  'THE PULP': pulpFightMusic,
 };
 
 const MUSIC_VOLUME = 0.35;
-[titleMusic, fightMusic, templeFightMusic, peakFightMusic, denFightMusic, voidFightMusic, snowyCityFightMusic, foggyCityFightMusic, rainyCityFightMusic, glowingCityFightMusic, sunnyCityFightMusic, theCountMusic].forEach(m => m.volume = MUSIC_VOLUME);
+[titleMusic, fightMusic, templeFightMusic].forEach(m => m.volume = MUSIC_VOLUME);
 
 let currentFightMusic = null;
 
@@ -4674,8 +4636,8 @@ function drawAssistSelectScreen() {
         const dh = meta.h * sFit;
         const pulse = selected ? Math.sin(Date.now() * 0.005) * 3 : 0;
         ctx.drawImage(img, -dw / 2 - pulse / 2, -15 - dh / 2 - pulse / 2, dw + pulse, dh + pulse);
-      } else // King Roller: render the RollSelect photo instead of the procedural orb.
-      if (assists[i].isKingRoller && kingRollerImages.RollSelect) {
+      } else if (assists[i].isKingRoller && kingRollerImages.RollSelect) {
+        // King Roller: render the RollSelect photo instead of the procedural orb.
         const img = kingRollerImages.RollSelect;
         const meta = KING_ROLLER_ANCHORS.RollSelect;
         // Fit inside ~120w x 90h area centered around y=-15 (where the orb sits).

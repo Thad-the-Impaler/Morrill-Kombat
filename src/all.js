@@ -155,6 +155,37 @@ const ZYLLEN_ANCHORS = {
 // stationary visible height (head crown to foot) is bot - top = 1406.
 const ZYLLEN_SCALE = 95 / (1726 - 320);
 
+// --- MINH SPRITE ASSETS ---
+const minhImages = {};
+const minhSpriteData = {
+  'MinStationary': 'Assets/Fighters/Minh/MinStationary.PNG',
+  'MinPunch':      'Assets/Fighters/Minh/MinPunch.PNG',
+  'MinUppercut':   'Assets/Fighters/Minh/MinUppercut.PNG',
+  'MinLowKick':    'Assets/Fighters/Minh/MinLowKick.PNG',
+  'MinHighKick':   'Assets/Fighters/Minh/MinHighKick.PNG',
+  'MinSelect':     'Assets/Fighters/Minh/MinSelect.PNG',
+};
+for (const [name, src] of Object.entries(minhSpriteData)) {
+  const img = new Image();
+  img.onload = function() { minhImages[name] = img; };
+  img.src = src;
+}
+// Per-sprite metadata: source dimensions and (anchorX, anchorY) — the
+// pixel that should land on the fighter's foot/ground point. Foot
+// anchors were computed from each sprite's alpha mask to keep the
+// planted foot stable across poses.
+const MINH_ANCHORS = {
+  MinStationary: { w: 870,  h: 1978, anchorX: 447, anchorY: 1726 },
+  MinPunch:      { w: 1018, h: 1978, anchorX: 432, anchorY: 1749 },
+  MinUppercut:   { w: 835,  h: 1978, anchorX: 268, anchorY: 1729 },
+  MinLowKick:    { w: 1014, h: 1978, anchorX: 177, anchorY: 1739 },
+  MinHighKick:   { w: 1485, h: 1978, anchorX: 821, anchorY: 1749 },
+  // Select-card photo: bottom-anchored, no foot tracking needed.
+  MinSelect:     { w: 1092, h: 1318 },
+};
+// Scale factor: ~95px head-to-foot, matching the other roster fighters.
+const MINH_SCALE = 95 / (1726 - 143);
+
 // --- TITLE LOGO ---
 // Native size: 1360x768 (aspect ratio ~1.77).
 const titleLogoImage = new Image();
@@ -168,8 +199,8 @@ titleLogoImage.src = TITLE_LOGO.src;
 // --- KING ROLLER ASSIST ASSETS ---
 const kingRollerImages = {};
 const kingRollerSpriteData = {
-  'RollSelect': 'Assets/Assists/RollSelect.PNG',
-  'RollJoust': 'Assets/Assists/RollJoust.PNG',
+  'RollSelect': 'Assets/Assists/King Roller/RollSelect.PNG',
+  'RollJoust': 'Assets/Assists/King Roller/RollJoust.PNG',
 };
 for (const [name, src] of Object.entries(kingRollerSpriteData)) {
   const img = new Image();
@@ -348,6 +379,15 @@ const characters = [
     desc: 'The Mysterious One',
     quote: '"TODAY, WE WILL BE WATCHING..." - Zyllen',
     isZyllen: true
+  },
+  {
+    name: 'MINH',
+    color: '#1c1c1c',
+    accent: '#f5e6c8',
+    outline: '#000000',
+    stats: { speed: 4.0, power: 1.0, defense: 1.0 },
+    desc: 'The Shadow',
+    isMinh: true
   }
 ];
 
@@ -622,6 +662,16 @@ const zyllenChar = {
   desc: 'The Mysterious One',
   quote: '"TODAY, WE WILL BE WATCHING..." - Zyllen',
   isZyllen: true
+};
+
+const minhChar = {
+  name: 'MINH',
+  color: '#1c1c1c',
+  accent: '#f5e6c8',
+  outline: '#000000',
+  stats: { speed: 4.0, power: 1.0, defense: 1.0 },
+  desc: 'The Shadow',
+  isMinh: true
 };
 
 // Fixed order for secret characters (after base roster)
@@ -1947,10 +1997,10 @@ const sfx_uppercut = new Audio('Assets/Sound/sfx_uppercut.wav');
 const sfx_kick = new Audio('Assets/Sound/sfx_kick.wav');
 const sfx_comboAttack = new Audio('Assets/Sound/sfx_comboAttack.wav');
 const sfx_assistShoot = new Audio('Assets/Sound/sfx_assistShoot.wav');
-const sfx_shadePunch = new Audio('Assets/Sound/sfx_shadePunch.wav');
-const sfx_shadeKick = new Audio('Assets/Sound/sfx_shadeKick.wav');
-const sfx_serpent = new Audio('Assets/Sound/sfx_serpent.wav');
-const sfx_sticker = new Audio('Assets/Sound/sfx_sticker.wav');
+const sfx_shadePunch = new Audio(); // asset removed — kept as no-op stub
+const sfx_shadeKick = new Audio(); // asset removed — kept as no-op stub
+const sfx_serpent = new Audio(); // asset removed — kept as no-op stub
+const sfx_sticker = new Audio(); // asset removed — kept as no-op stub
 
 const SFX_VOLUME = 0.5;
 [sfx_jab, sfx_uppercut, sfx_kick, sfx_comboAttack, sfx_assistShoot, sfx_shadePunch, sfx_shadeKick, sfx_serpent, sfx_sticker].forEach(s => s.volume = SFX_VOLUME);
@@ -1960,27 +2010,27 @@ function playSfx(sound) {
   sound.play().catch(() => {});
 }
 // --- ABILITY SOUND EFFECTS ---
-const sfx_blazeKick = new Audio('Assets/Sound/sfx_blazeKick.wav');
-const sfx_boltStrike = new Audio('Assets/Sound/sfx_boltStrike.wav');
-const sfx_codePort = new Audio('Assets/Sound/sfx_codePort.wav');
-const sfx_earthquake = new Audio('Assets/Sound/sfx_earthquake.wav');
-const sfx_flashFreeze = new Audio('Assets/Sound/sfx_flashFreeze.wav');
-const sfx_glacierSlam = new Audio('Assets/Sound/sfx_glacierSlam.wav');
-const sfx_hayExplosion = new Audio('Assets/Sound/sfx_hayExplosion.wav');
-const sfx_infernoRush = new Audio('Assets/Sound/sfx_infernoRush.wav');
-const sfx_ironWall = new Audio('Assets/Sound/sfx_ironWall.wav');
-const sfx_jayForm = new Audio('Assets/Sound/sfx_jayForm.wav');
-const sfx_jazzDance = new Audio('Assets/Sound/sfx_jazzDance.wav');
-const sfx_phantomSlash = new Audio('Assets/Sound/sfx_phantomSlash.wav');
-const sfx_rubberStretch = new Audio('Assets/Sound/sfx_rubberStretch.wav');
-const sfx_shadowStep = new Audio('Assets/Sound/sfx_shadowStep.wav');
-const sfx_sizeShifting = new Audio('Assets/Sound/sfx_sizeShifting.wav');
-const sfx_soulSwap = new Audio('Assets/Sound/sfx_soulSwap.wav');
-const sfx_thunderChain = new Audio('Assets/Sound/sfx_thunderChain.wav');
-const sfx_toxicBite = new Audio('Assets/Sound/sfx_toxicBite.wav');
-const sfx_venomBlast = new Audio('Assets/Sound/sfx_venomBlast.wav');
-const sfx_warpWalk = new Audio('Assets/Sound/sfx_warpWalk.wav');
-const sfx_waterPhase = new Audio('Assets/Sound/sfx_waterPhase.wav');
+const sfx_blazeKick = new Audio(); // asset removed — kept as no-op stub
+const sfx_boltStrike = new Audio(); // asset removed — kept as no-op stub
+const sfx_codePort = new Audio(); // asset removed — kept as no-op stub
+const sfx_earthquake = new Audio(); // asset removed — kept as no-op stub
+const sfx_flashFreeze = new Audio(); // asset removed — kept as no-op stub
+const sfx_glacierSlam = new Audio(); // asset removed — kept as no-op stub
+const sfx_hayExplosion = new Audio(); // asset removed — kept as no-op stub
+const sfx_infernoRush = new Audio(); // asset removed — kept as no-op stub
+const sfx_ironWall = new Audio(); // asset removed — kept as no-op stub
+const sfx_jayForm = new Audio(); // asset removed — kept as no-op stub
+const sfx_jazzDance = new Audio(); // asset removed — kept as no-op stub
+const sfx_phantomSlash = new Audio(); // asset removed — kept as no-op stub
+const sfx_rubberStretch = new Audio(); // asset removed — kept as no-op stub
+const sfx_shadowStep = new Audio(); // asset removed — kept as no-op stub
+const sfx_sizeShifting = new Audio(); // asset removed — kept as no-op stub
+const sfx_soulSwap = new Audio(); // asset removed — kept as no-op stub
+const sfx_thunderChain = new Audio(); // asset removed — kept as no-op stub
+const sfx_toxicBite = new Audio(); // asset removed — kept as no-op stub
+const sfx_venomBlast = new Audio(); // asset removed — kept as no-op stub
+const sfx_warpWalk = new Audio(); // asset removed — kept as no-op stub
+const sfx_waterPhase = new Audio(); // asset removed — kept as no-op stub
 
 [sfx_blazeKick, sfx_boltStrike, sfx_codePort, sfx_earthquake, sfx_flashFreeze, sfx_glacierSlam, sfx_hayExplosion, sfx_infernoRush, sfx_ironWall, sfx_jayForm, sfx_jazzDance, sfx_phantomSlash, sfx_rubberStretch, sfx_shadowStep, sfx_sizeShifting, sfx_soulSwap, sfx_thunderChain, sfx_toxicBite, sfx_venomBlast, sfx_warpWalk, sfx_waterPhase].forEach(s => s.volume = SFX_VOLUME);
 sfx_sizeShifting.volume = 1.0;
@@ -3053,6 +3103,35 @@ function drawCharacterPreview(char, x, y, size, selected, label) {
 
   ctx.save();
   ctx.scale(sc, sc);
+  // Minh: render the MinSelect.PNG photo as the card preview
+  if (char.isMinh) {
+    const mImg = minhImages.MinSelect;
+    if (mImg) {
+      const a = MINH_ANCHORS.MinSelect;
+      // Match the visual envelope used for the other select cards (~78
+      // inner units tall). Width follows from the native aspect ratio.
+      const innerScale = 78 / a.h;
+      const dw = a.w * innerScale;
+      const dh = a.h * innerScale;
+      const dx = -dw / 2;                       // center horizontally
+      const dy = -25 - dh + bob / sc;           // bottom-anchor at foot line
+      ctx.drawImage(mImg, dx, dy, dw, dh);
+      ctx.restore();
+      // Name label below the image
+      ctx.font = `bold ${Math.max(10, s * 0.18)}px Arial`;
+      ctx.fillStyle = char.accent;
+      ctx.textAlign = 'center';
+      ctx.fillText(char.name, 0, s * 0.12);
+      if (label) {
+        ctx.font = `bold ${Math.max(11, s * 0.2)}px Arial`;
+        ctx.fillStyle = '#ffd700';
+        ctx.fillText(label, 0, s * 0.26);
+      }
+      ctx.restore();
+      return;
+    }
+    // Fallback (sprite not loaded yet) — fall through to default render
+  }
   // Zyllen: render the ZylSelect.PNG photo as the card preview
   if (char.isZyllen) {
     const zImg = zyllenImages.ZylSelect;
@@ -18202,6 +18281,48 @@ Fighter.prototype.drawThad = function(ctx) {
   }
 };
 
+Fighter.prototype.drawMinh = function(ctx) {
+  // Pick the appropriate sprite for the fighter's current state.
+  let key = 'MinStationary';
+  if (this.state === 'attack' && this.currentAttack) {
+    const n = this.currentAttack.name;
+    if      (n === 'Jab')       key = 'MinPunch';
+    else if (n === 'Uppercut')  key = 'MinUppercut';
+    else if (n === 'Low Kick')  key = 'MinLowKick';
+    else if (n === 'High Kick') key = 'MinHighKick';
+    else                         key = 'MinPunch'; // any other attack
+  }
+  const img = minhImages[key] || minhImages.MinStationary;
+  if (!img) return; // sprites not loaded yet — skip this frame
+  const a = MINH_ANCHORS[key] || MINH_ANCHORS.MinStationary;
+
+  ctx.save();
+  ctx.translate(this.x, this.y);
+  if (this._rumbleRotation) ctx.rotate(this._rumbleRotation);
+
+  // Ground shadow (matches default fighter shadow)
+  ctx.fillStyle = 'rgba(0,0,0,0.3)';
+  ctx.beginPath();
+  ctx.ellipse(0, 2, 30, 6, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Hit-flash blink — skip the body sprite for half-frames while flashing.
+  const skipBody = this.flashTimer > 0 && Math.floor(this.flashTimer / 2) % 2 === 0;
+  if (!skipBody) {
+    if (this.facing === -1) ctx.scale(-1, 1);
+    const s = MINH_SCALE;
+    ctx.drawImage(img, -a.anchorX * s, -a.anchorY * s, a.w * s, a.h * s);
+  }
+  ctx.restore();
+
+  // Assist projectile (drawn in world space, after the body).
+  if (this.assistActive) {
+    ctx.save();
+    this.drawAssistProjectile(this.assistActive);
+    ctx.restore();
+  }
+};
+
 Fighter.prototype.drawZyllen = function(ctx) {
   // Pick the appropriate sprite for the fighter's current state.
   let key = 'ZylStationary';
@@ -18259,6 +18380,11 @@ Fighter.prototype.draw = function(ctx) {
   // Zyllen uses sprite-based rendering — fully self-contained.
   if (this.char.isZyllen && !(gameMode === 'practice' && !this.isPlayer && !this.char.isDrone)) {
     this.drawZyllen(ctx);
+    return;
+  }
+  // Minh uses sprite-based rendering — fully self-contained.
+  if (this.char.isMinh && !(gameMode === 'practice' && !this.isPlayer && !this.char.isDrone)) {
+    this.drawMinh(ctx);
     return;
   }
   // Draw as punching bag or mannequin in practice mode (drone draws as normal fighter)

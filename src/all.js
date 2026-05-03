@@ -2894,26 +2894,13 @@ function drawTitleScreen() {
   // Logo (replaces the old canvas text). Width chosen so the logo's
   // bottom sits a few px above the subtitle/decorative line in the outer
   // (unscaled) coord space; height follows from the native 1360x768 aspect.
+  // If the logo PNG hasn't finished loading yet we draw nothing — it pops in
+  // a few frames later. We deliberately do NOT fall back to canvas-text
+  // because that renders the old pre-logo "MORRILL KOMBAT" title.
   if (titleLogoImage.complete && titleLogoImage.naturalWidth) {
     const lw = 460;
     const lh = lw * TITLE_LOGO.h / TITLE_LOGO.w; // ~260
     ctx.drawImage(titleLogoImage, -lw / 2, -lh / 2, lw, lh);
-  } else {
-    // Fallback while the logo is still loading: render the original
-    // canvas-text title so the screen isn't blank on first paint.
-    ctx.font = 'bold 72px Arial';
-    ctx.textAlign = 'center';
-    ctx.fillStyle = 'rgba(255,140,0,0.35)';
-    ctx.fillText('MORRILL KOMBAT', 4, 4);
-    const titleGrad = ctx.createLinearGradient(-200, -40, 200, 40);
-    titleGrad.addColorStop(0, '#ff8c00');
-    titleGrad.addColorStop(0.5, '#ffb700');
-    titleGrad.addColorStop(1, '#ffd700');
-    ctx.fillStyle = titleGrad;
-    ctx.fillText('MORRILL KOMBAT', 0, 0);
-    ctx.strokeStyle = '#000';
-    ctx.lineWidth = 2;
-    ctx.strokeText('MORRILL KOMBAT', 0, 0);
   }
   ctx.restore();
 

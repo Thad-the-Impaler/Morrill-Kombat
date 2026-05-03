@@ -1,8 +1,8 @@
 # Morrill Kombat — Project Plan
 
-A reference document for Claude (and future me) so successive editing sessions
-don't drift on conventions, blow up the build, or rediscover the same
-information from scratch every time.
+A reference document for Claude (and future me) so successive editing
+sessions don't drift on conventions, blow up the layout, or rediscover the
+same information from scratch every time.
 
 If you find yourself wanting to investigate "how does X work" or "where does
 Y live" — read this file first. If something here is wrong, fix it.
@@ -13,8 +13,8 @@ Y live" — read this file first. If something here is wrong, fix it.
 
 Single-page HTML5 canvas fighting game forked from
 [Rumbler](https://github.com/Thad-the-Impaler/rumbler) and reskinned to
-**Morrill Kombat**. All game logic lives in one big JS file; assets are
-loaded from disk via relative paths.
+**Morrill Kombat**. Everything (game code + every PNG/MP3/WAV) lives
+inside a single `index.html` file.
 
 - **Live site**: https://thad-the-impaler.github.io/Morrill-Kombat/
 - **Repo**: https://github.com/Thad-the-Impaler/Morrill-Kombat
@@ -22,48 +22,18 @@ loaded from disk via relative paths.
 
 ---
 
-## What file is what (read this first if confused)
+## How to play / edit / deploy
 
-There are three HTML-shaped things in the project, and they are NOT
-interchangeable. The most common confusion is opening the wrong one
-locally and seeing a broken page.
+There is intentionally exactly one file that runs the game. No build step.
+No HTTP server. No Actions workflow.
 
-| File | What is it | Open it? |
-|---|---|---|
-| `src/template.html` | A **build input** — only the HTML head + opening `<script>`. No game code. Concatenated with `src/all.js` by `build.py` to produce `index.html`. | **No** — just a black screen. |
-| `index.html` (project root) | The **build artifact** — produced by `python3 src/build.py`. Has the full game inline. Gitignored. | Only via HTTP, not via `file://`. See below. |
-| `https://thad-the-impaler.github.io/Morrill-Kombat/` | The **deployed site** — built by GH Actions on every push to `main`, served over HTTPS by GitHub Pages. | Yes, this just works. |
+| Task | What to do |
+|---|---|
+| **Play locally** | Double-click `index.html` in Finder. The browser opens it via `file://` and the game runs immediately because every asset is embedded inline. |
+| **Edit code** | Edit `index.html` directly (via Claude Code, Cursor, VSCode, whatever). The JS lives inside the `<script>` tag. |
+| **Deploy** | `git push`. GitHub Pages serves `index.html` from `main` directly — no build step. The deployed site updates within ~30 seconds. |
 
-### Why `file://` doesn't work
-
-The game loads sprite PNGs and audio via relative paths
-(`Assets/Fighters/Arnav/ArnStationary.PNG`, etc.). When you double-click
-`index.html` in Finder, the browser loads it via `file://`, and modern
-browsers **refuse to fetch other files from disk** when the page itself
-came from disk — security sandbox. Every sprite load fails silently,
-every `new Audio(...)` fails, and you get a black canvas with no art.
-
-Serving the same file over HTTP (even `localhost`) bypasses the
-sandbox. That's what GitHub Pages does, and that's what `play.command`
-does locally.
-
-### How to play locally
-
-**Easiest**: double-click `play.command` in the project root. It
-rebuilds `index.html`, starts a local HTTP server on port 8765, and
-opens the game in your browser. Press Ctrl+C in the Terminal window
-when done.
-
-**Manual equivalent**:
-```bash
-python3 src/build.py
-python3 -m http.server 8765
-# then visit http://localhost:8765/
-```
-
-**If the deployed Pages site is enough**: just `git push`. The Actions
-workflow rebuilds and deploys in ~30s, and you can play it from any
-browser at the live URL.
+That's it. The whole pipeline.
 
 ---
 
@@ -71,106 +41,92 @@ browser at the live URL.
 
 ```
 .
-├── .github/workflows/deploy.yml   # GH Actions: build + deploy to Pages on push to main
-├── .gitignore                      # ignores index.html, index copy.html, .DS_Store, .claude/
-├── plan.md                         # this file
-├── src/
-│   ├── template.html               # HTML head + opening <script>
-│   ├── all.js                      # the JS body (CANONICAL SOURCE — edit this)
-│   └── build.py                    # concatenates template + all.js into index.html
-└── Assets/
-    ├── Logo2.png                   # title-screen logo (1360x768)
-    ├── Music/                      # 3 mp3s
-    │   ├── titleMusic.mp3
-    │   ├── fightMusic.mp3          # CLASSIC stage
-    │   └── templeFightMusic.mp3    # THE TEMPLE stage
-    ├── Sound/                      # 5 wavs (only the active SFX have backing files)
-    │   ├── sfx_jab.wav
-    │   ├── sfx_uppercut.wav
-    │   ├── sfx_kick.wav
-    │   ├── sfx_comboAttack.wav
-    │   └── sfx_assistShoot.wav
-    ├── Portraits/                  # 24 character icons (3 practice + 21 bosses)
+├── .gitignore       # ignores index copy.html (legacy), .DS_Store, .claude/
+├── plan.md          # this file
+├── index.html       # THE GAME — single self-contained file (~61 MB)
+└── Assets/          # working copies of original asset files (kept for editing)
+    ├── Logo2.png
+    ├── Music/       # 3 mp3s
+    ├── Sound/       # 5 wavs
+    ├── Portraits/   # 24 character icons (3 practice + 21 bosses)
     ├── Icons/
-    │   └── artikIconImg.png
-    ├── Fighters/                   # one folder per active fighter, 6 PNGs each
-    │   ├── Arnav/    # ArnStationary, ArnPunch, ArnUppercut, ArnLowKick, ArnHighKick, ArnSelect
-    │   ├── Thad/     # Thad{Stationary,Punch,Uppercut,LowKick,HighKick,Select}.PNG
-    │   ├── Zyllen/   # Zyl{...}.PNG
-    │   └── Minh/     # Min{...}.PNG
-    └── Assists/
-        ├── Jayce/             # JacOnstage.PNG, JacSelect.PNG
-        └── King Roller/       # RollJoust.PNG, RollSelect.PNG
+    ├── Fighters/    # one folder per fighter (Arnav, Thad, Zyllen, Minh)
+    └── Assists/     # one folder per assist (Jayce, King Roller)
 ```
 
-**Files NOT to commit / look for**:
-- `index.html` — generated by `src/build.py`. Gitignored. Rebuilt on every push by GH Actions.
-- `index copy.html` — legacy 171 MB monolith from the pre-refactor era. Deleted in cleanup. Gitignored as a safety net.
-- `.claude/` — Claude Code session state. Gitignored.
-- `.DS_Store` — macOS Finder metadata. Gitignored.
+`Assets/` is a working folder — the originals of every embedded asset,
+kept around so you can replace a sprite by dropping in a new file and
+asking Claude to re-embed. The runtime game doesn't read from `Assets/`
+directly; it reads from the embedded base64 inside `index.html`.
 
 ---
 
-## Build & deploy
+## Why the file is so big
 
-**Local rebuild** (after editing `src/all.js`):
-```bash
-python3 src/build.py
-# → produces ./index.html (~990 KB)
-```
+`index.html` is ~61 MB because every PNG, MP3, and WAV is embedded as a
+base64 data URI inside the JS. That's the price of the
+"double-click-and-play" workflow — the alternative (separate asset files
+loaded via relative paths) doesn't work via `file://` due to browser
+security, and would require running an HTTP server locally.
 
-**Local test** (relative-path assets need an HTTP server, not file://):
-```bash
-python3 -m http.server 8765
-# then open http://localhost:8765/
-```
+GitHub's per-file limit is 100 MB; we're under. Git pushes for code-only
+changes are still fast because the diff is small (only the JS portion
+changes). Adding a new asset is a one-time large-diff push.
 
-**Deploy**: just `git push` to `main`. The workflow at
-`.github/workflows/deploy.yml` runs `src/build.py` on Ubuntu, copies
-`index.html` + `Assets/` into a `_site/` directory, and deploys via
-`actions/deploy-pages@v4`.
-
-To watch a deploy:
-```bash
-gh run list --repo Thad-the-Impaler/Morrill-Kombat --limit 1
-gh run view <id> --repo Thad-the-Impaler/Morrill-Kombat
-```
+If the file ever needs to grow past ~95 MB, we'd need to switch
+strategies — but right now there's plenty of headroom.
 
 ---
 
-## Source map of `src/all.js`
+## Source map of `index.html`
 
-**Important**: line numbers shift as the file is edited. These are anchors
-(searchable comment headers and unique function names), not coordinates.
-Always grep before editing.
+The file is one HTML document with structure:
 
-| Section | Anchor | Contents |
+```
+<!DOCTYPE html>
+<html>
+<head>
+  <title>MORRILL KOMBAT</title>
+  <link rel="icon" ...>
+  <style>...</style>
+</head>
+<body>
+  <canvas id="gameCanvas"></canvas>
+  <script>
+    /* THE GAME LIVES HERE — ~30,000 lines of JS */
+  </script>
+</body>
+</html>
+```
+
+The JS body has section markers as comments. **Don't trust line numbers
+across sessions** — they shift after every edit. Use these search anchors:
+
+| Section | Anchor (grep these) | Contents |
 |---|---|---|
-| Asset loaders | `// --- ARNAV SPRITE ASSETS ---` (etc.) | Image objects + per-pose anchor metadata + scale constants for each fighter and assist. Order: Arnav → Thad → Zyllen → Minh → TITLE_LOGO → King Roller → Jayce. |
+| Asset loaders | `// --- ARNAV SPRITE ASSETS ---` (also `THAD`, `ZYLLEN`, `MINH`, `KING ROLLER`, `JAYCE`, `TITLE LOGO`) | Image objects + per-pose anchor metadata + scale constants. Each fighter/assist has its own block. |
 | Difficulty data | `const difficulties = [` | EASY / NORMAL / HARD / BRUTAL stat tables for CPU AI. |
-| Levels | `// --- LEVELS ---` → `const defaultLevels = [` | Active stages: CLASSIC, THE TEMPLE. `secretLevels = []` left as empty array. |
+| Levels | `// --- LEVELS ---` | Active stages: CLASSIC, THE TEMPLE. |
 | Practice targets | `const punchingBag`, `const mannequin`, `const drone` | Inert "characters" used by practice mode. |
-| Roster | `// --- CHARACTERS ---` → `const characters = [` | Active 4: ARNAV, THAD, ZYLLEN, MINH. Each fighter also has a standalone `<name>Char` const used by `practiceBossList` lookups. |
+| Roster | `// --- CHARACTERS ---` → `const characters = [` | Active 4: ARNAV, THAD, ZYLLEN, MINH. Each also has a standalone `<name>Char` const right after. |
 | Assists | `const assists = [` | Active 2: KING ROLLER, JAYCE. |
 | Master passkey | `function activateMasterPasskey()` / `function isMasterPasskeyNeeded()` | Type `imp11` to unlock rumblePractice + mark all bosses defeated. |
-| Attacks | `// --- ATTACKS ---` | Damage / startup / hitstun tables for jab, lowKick, uppercut, highKick, borgusSlam. |
-| Rumbles (finishers) | `// --- RUMBLES (Fatalities) ---` → `const characterRumbles = {` | Per-character finisher metadata. Many entries are dead refs to removed chars — harmless, never triggered. |
-| Bosses | (after the `*Char` consts for active fighters) | 21 boss `*Char` consts referenced by `practiceBossList`. **Do not remove these without explicit instructions** — they're live in boss-practice. |
-| Campaign data | `// --- CAMPAIGN DATA ---` (HEADER STILL EXISTS, BLOCK GUTTED) | Header survives but the `campaigns` object, `setupCampaignFight`, `drawCampaignSelectScreen`, etc. were all removed in Tier 2 Phase 5. |
-| Game state | `// --- GAME STATE ---` → `let gameState`, `let gameMode`, etc. | The reactive globals that drive screen routing. |
-| `*Unlocked` flags | (around line ~1300) | 3 city flags + 5 assist flags + bojdo flags. Mostly inert (gates removed `secretLevels` filtering). Master passkey still flips them. |
-| Music | `const _deadSfx = {`, `const levelMusicMap = {` | Single shared no-op object aliased by 25 dead SFX consts. Real audio is loaded above. |
-| Title / menu / select screens | `function drawTitleScreen` → `drawCharSelectScreen` → `drawAssistSelectScreen` → `drawDifficultySelectScreen` → `drawLevelSelectScreen` → `drawBossSelectScreen` → `drawPracticeTargetSelectScreen` → `drawPauseScreen` | Each screen has its own draw function. Title menu is `drawTitleScreen`. |
+| Attacks | `// --- ATTACKS ---` | Damage / startup / hitstun tables for jab, lowKick, uppercut, highKick. |
+| Rumbles (finishers) | `// --- RUMBLES (Fatalities) ---` | Per-character finisher metadata. Many entries are dead refs to removed chars — harmless. |
+| Bosses | (after the `*Char` consts for active fighters) | 21 boss `*Char` consts referenced by `practiceBossList`. **Don't remove without explicit instructions** — they're live in boss-practice. |
+| Game state | `// --- GAME STATE ---` → `let gameState`, `let gameMode` | The reactive globals that drive screen routing. |
+| Music routing | `const levelMusicMap = {`, `function playFightMusic` | Stage → audio track map. Falls back to `fightMusic`. |
+| SFX | `// --- FIGHTING SOUND EFFECTS ---`, `const _deadSfx = {` | 5 active SFX with backing data URIs. 25 inert SFX names alias the shared `_deadSfx` no-op. |
+| Title / menu screens | `function drawTitleScreen`, `drawCharSelectScreen`, `drawAssistSelectScreen`, etc. | Each screen has its own draw function. |
 | Versus / Victory | `function drawVersusScreen`, `drawVictoryScreen` | Pre-fight intro, post-fight rendering. |
-| Background | `function drawBackground` | Per-stage scenery (CLASSIC + TEMPLE active). |
-| Rumble cinematics | (huge region after `drawBackground`) | Per-character finisher animation routines. Most are dead refs but still loaded — leave alone unless you have a specific reason. |
-| Fighter class | `class Fighter {` → various `Fighter.prototype.X` methods | Constructor, update loop, hit detection, AI, attack execution. |
-| Fighter draw | `Fighter.prototype.drawArnav`, `drawThad`, `drawMinh`, `drawZyllen`, then `Fighter.prototype.draw` | Each sprite-based fighter has its own draw method. The dispatch in `Fighter.prototype.draw` checks `this.char.is<Name>` flags and calls the right one. |
-| Assist projectile | `Fighter.prototype.drawAssistProjectile` | Renders all assist projectiles (King Roller charge, Jayce + bullets). Branches on `a.is<Name>`. |
-| Assist update | (inside the per-frame fighter update path) | Branches on `a.is<Name>` to update assist position / hit detection. |
+| Background | `function drawBackground` | Per-stage scenery. |
+| Rumble cinematics | (large region) | Per-character finisher animations. Most are inert — leave alone. |
+| Fighter class | `class Fighter {` → `Fighter.prototype.X` methods | Constructor, update loop, hit detection, AI, attack execution. |
+| Fighter draw | `Fighter.prototype.drawArnav` (etc.), then `Fighter.prototype.draw` | Each sprite-based fighter has its own draw method. The dispatch in `Fighter.prototype.draw` checks `this.char.is<Name>` flags. |
+| Assist projectile | `Fighter.prototype.drawAssistProjectile` | Renders all assist projectiles. Branches on `a.is<Name>`. |
 | Input dispatch | `function handleKeyPress(key, isRepeat)` | One giant switch on `gameState`. |
 | Game flow helpers | `function startVersusScreen`, `startFight`, `startRumblePractice` | State transitions. |
-| Main loop | (toward end of file) | requestAnimationFrame driver, calls update + draw per frame. |
+| Main loop | (toward end) | requestAnimationFrame driver. |
 
 ---
 
@@ -178,62 +134,57 @@ Always grep before editing.
 
 ### Theme
 
-- **Title-screen palette**: orange / yellow / black (set during initial reskin).
-- **Logo**: `Assets/Logo2.png`, 1360×768. Drawn at 460px wide on the title.
+- **Title-screen palette**: orange / yellow / black.
+- **Logo**: title-screen logo (1360×768), embedded as `titleLogoImage`.
 - **Per-fighter accent colors**: Arnav blue, Thad green, Zyllen gray, Minh beige.
 - **Master passkey code**: `imp11` (type on title or char-select).
 
-### Sprite scale convention
+### Sprite scale
 
 Every sprite-based fighter renders at **~95 px head-to-foot on the 960×540
-canvas** to read at the same scale as Rumbler's procedural fighters. The
-math:
+canvas** to read at the same scale as Rumbler's procedural fighters:
 
 ```js
 const FOO_SCALE = 95 / (foot_anchor_y - top_y);
 ```
 
-`top_y` and `foot_anchor_y` are computed from the alpha mask of the
+`top_y` and `foot_anchor_y` come from alpha-mask analysis of the
 **stationary** sprite — the foot anchor is the centroid of the
-bottom-most opaque band; `top_y` is the first row with any opaque pixel.
-
-Per-pose anchors are also from the alpha mask:
-
-```python
-# python/extract_anchors.py — alpha-mask centroid of the bottom band
-def foot_anchor(alpha):
-    rows_with_pixels = ...
-    bot = max(rows_with_pixels)
-    band = pixels in rows [bot-h/60, bot]
-    return centroid_x_of_band, bot
-```
-
-Foot anchor lands at `(0, 0)` in the locally-translated coord system, so
-all sprites plant on the same ground line regardless of pose.
+bottom-most opaque band.
 
 ### Card preview
 
 Select-card photos use **78 inner units** as the target height, fitting
-inside a ~120w × ~100h area centered around y=-15. Width follows the native
-aspect ratio. See any `if (char.is<Name>)` branch in `drawCharacterPreview`.
+inside a ~120w × ~100h area centered around y=-15. See any
+`if (char.is<Name>)` branch in `drawCharacterPreview`.
 
 ### Music routing
 
-- `levelMusicMap[selectedLevel.name] || fightMusic` — falls back to the
-  default `fightMusic` for any unmapped stage. Currently mapped:
-  - `'CLASSIC'` → `fightMusic`
-  - `'THE TEMPLE'` → `templeFightMusic`
+- `levelMusicMap[selectedLevel.name] || fightMusic` — falls back to
+  default for any unmapped stage.
+- Currently mapped: `'CLASSIC'` → `fightMusic`, `'THE TEMPLE'` → `templeFightMusic`.
 - `playFightMusic(stageName)` is the only entry point.
-- `titleMusic` plays on title / menu screens via `playTitleMusic()`.
+- `titleMusic` plays on title / menu via `playTitleMusic()`.
 
-### Sfx
+### SFX
 
-- 5 active SFX with backing `.wav` files: `sfx_jab`, `sfx_uppercut`,
+- 5 active SFX with embedded data URIs: `sfx_jab`, `sfx_uppercut`,
   `sfx_kick`, `sfx_comboAttack`, `sfx_assistShoot`.
-- 25 inert SFX names (`sfx_blazeKick`, `sfx_jazzDance`, etc.) all alias the
-  shared `_deadSfx` no-op object. Calls to `playSfx(sfx_X)` for these
-  silently no-op without 404'ing or maintaining hidden DOM `<audio>`
-  elements.
+- 25 inert SFX names all alias the shared `_deadSfx` no-op object. Calls
+  to `playSfx(sfx_X)` for these silently no-op.
+
+---
+
+## Playbook: adding a new asset
+
+1. **Drop the file in `Assets/`** under the right subfolder
+   (`Assets/Fighters/<Name>/`, `Assets/Assists/<Name>/`,
+   `Assets/Music/`, etc.).
+2. **Ask Claude to embed it** — Claude reads the file, base64-encodes it,
+   and substitutes the data URI inline in `index.html` at the right
+   place in the asset loader.
+3. **Test locally** — double-click `index.html` to verify it loads.
+4. **Push** — `git push` deploys.
 
 ---
 
@@ -243,28 +194,24 @@ The Arnav / Thad / Zyllen / Minh integrations are all the same shape. To
 add fighter `Foo`:
 
 1. **Drop sprites into `Assets/Fighters/Foo/`**:
-   - `FooStationary.PNG` — idle pose
-   - `FooPunch.PNG` — Jab
-   - `FooUppercut.PNG` — Uppercut
-   - `FooLowKick.PNG` — Low Kick
-   - `FooHighKick.PNG` — High Kick
-   - `FooSelect.PNG` — character-select photo (any size, bottom-anchored)
+   `FooStationary.PNG`, `FooPunch.PNG`, `FooUppercut.PNG`,
+   `FooLowKick.PNG`, `FooHighKick.PNG`, `FooSelect.PNG`.
 
-2. **Compute foot anchors** with a Python script that decodes each PNG and
-   finds the alpha-mask centroid of the bottom band. Capture
+2. **Compute foot anchors** with a Python script that decodes each PNG
+   and finds the alpha-mask centroid of the bottom band. Capture
    `(w, h, anchorX, anchorY)` per pose plus `top_y` of the stationary
    sprite for the scale calc.
 
-3. **In `src/all.js`**:
+3. **In `index.html` (inside the `<script>` tag)**:
 
    ```js
    // After the previous fighter's block (search for `// --- MINH SPRITE ASSETS ---`)
    // --- FOO SPRITE ASSETS ---
    const fooImages = {};
    const fooSpriteData = {
-     'FooStationary': 'Assets/Fighters/Foo/FooStationary.PNG',
-     'FooPunch':      'Assets/Fighters/Foo/FooPunch.PNG',
-     // ... etc
+     'FooStationary': 'data:image/png;base64,<...>',
+     'FooPunch':      'data:image/png;base64,<...>',
+     // ... etc, with the data URIs Claude generates from the source files
    };
    for (const [name, src] of Object.entries(fooSpriteData)) {
      const img = new Image();
@@ -276,15 +223,15 @@ add fighter `Foo`:
      // ... etc
      FooSelect: { w, h }, // no anchor needed for the photo
    };
-   const FOO_SCALE = 95 / (anchorY - top_y);  // ~95px head-to-foot
+   const FOO_SCALE = 95 / (anchorY - top_y);
    ```
 
 4. **Roster entry** in the `characters[]` array:
    ```js
    {
      name: 'FOO',
-     color: '#xxxxxx',         // primary body/UI color
-     accent: '#yyyyyy',        // highlight color (used on stat bars, card border)
+     color: '#xxxxxx',
+     accent: '#yyyyyy',
      outline: '#000000',
      stats: { speed: 4.0, power: 1.0, defense: 1.0 },
      desc: 'The Whatever',
@@ -299,15 +246,14 @@ add fighter `Foo`:
    `if (char.isMinh)` block, change names.
 
 7. **`Fighter.prototype.drawFoo`** — copy `drawMinh`, change all `Min` →
-   `Foo`, `MINH_` → `FOO_`. The method body picks a sprite based on
-   `currentAttack.name` (Jab / Uppercut / Low Kick / High Kick / fallback
-   to Punch), draws shadow + sprite, mirrors via `ctx.scale(-1, 1)` when
-   `facing === -1`, and calls `drawAssistProjectile` after the body so
-   assist projectiles still render during hit-flash blink.
+   `Foo`, `MINH_` → `FOO_`. Picks a sprite based on
+   `currentAttack.name`, draws shadow + sprite, mirrors via
+   `ctx.scale(-1, 1)` when `facing === -1`, calls
+   `drawAssistProjectile` after the body.
 
 8. **Early-return** in `Fighter.prototype.draw` — copy the `isMinh` line.
 
-9. Build, smoke-test, commit, push.
+9. Test by double-clicking `index.html`. Push.
 
 ---
 
@@ -315,19 +261,14 @@ add fighter `Foo`:
 
 See King Roller / Jayce. Six wiring sites:
 
-1. Sprite loader + `<NAME>_ANCHORS` + `<NAME>_SCALE`.
+1. Sprite loader + `<NAME>_ANCHORS` + `<NAME>_SCALE` (data URIs embedded).
 2. `assists[]` entry with `is<Name>: true`.
-3. `Fighter.prototype.callAssist` branch — spawn the `assistActive` object
-   with appropriate position, velocity, timer, and any per-assist state
-   (e.g., Jayce's three-phase state machine).
-4. `assistActive` update tick — handle motion, hit detection, and
-   despawn. Hit detection uses
-   `opponent.isHitAt(a.x, a.y, radiusX, radiusY)`.
-5. `Fighter.prototype.drawAssistProjectile` branch — render the sprite
-   (and any sub-objects like Jayce's bullets).
+3. `Fighter.prototype.callAssist` branch — spawn the `assistActive`
+   object with appropriate position, velocity, timer.
+4. `assistActive` update tick — handle motion, hit detection, despawn.
+5. `Fighter.prototype.drawAssistProjectile` branch — render the sprite.
 6. Assist-select card branch — render the select photo instead of the
-   procedural orb. Same fit math as fighter cards (~120 wide, ~100 tall,
-   centered at y=-15).
+   procedural orb.
 
 ---
 
@@ -342,27 +283,20 @@ See King Roller / Jayce. Six wiring sites:
   assistSelect → levelSelect → versus → fight (with rumble unlock)
 
 ### Always-dead code paths (touch with caution)
-These exist as "loaded but unreachable" — they don't crash because their
-gates can't fire, but the source still parses them.
 
-- **`testYourMight*` machinery** — `testYourMightActive` is declared `false`
-  and never set to `true` (its only setter, the campaign-mode
-  `setupCampaignFight`, is gone). All `if (testYourMightActive)` and
-  `if (!testYourMightActive)` checks are dead-evaluating. Roughly 22
-  references across draw/input/HUD code, **interleaved with Printer-Boss
-  fight code that is reachable via boss-practice**, so removing them
-  requires touching boss code.
-- **Old characters' rumble finishers** — entries in
-  `characterRumbles` map for BLAZE, ARTIK, VENOM, BOJDO, etc. The map is
-  still consulted but the keys never match a selectable fighter, so the
-  per-char render code never triggers.
-- **`bojdobojdo` flag references** in some overlay paths — the secret-
-  char system was fully removed; any leftover ref is in dead code.
+- **`testYourMight*` machinery** — `testYourMightActive` is declared
+  `false` and never set to `true` (its only setter, `setupCampaignFight`,
+  is gone). All checks against it are dead-evaluating. **Interleaved
+  with Printer-Boss fight code that IS reachable via boss-practice**, so
+  removing them requires touching boss code.
+- **Old characters' rumble finishers** — `characterRumbles` map entries
+  for BLAZE, ARTIK, VENOM, BOJDO, etc. The keys never match a selectable
+  fighter, so the per-char render code never triggers.
 
 ### Boss-practice mode
 
-Reachable via `Practice → Practice Boss → bossSelect`. The 21 bosses
-in `practiceBossList` are all live:
+Reachable via `Practice → Practice Boss → bossSelect`. The 21 bosses in
+`practiceBossList` are all live:
 
 ```
 BORGUS, ERICTHO, QUELLIC, BOJDOBOJDOBOJDO, SCALENA, BIRDEATER,
@@ -372,8 +306,9 @@ DARK DUPLAIRE, CANIS, RELAPMI, THE COUNT
 ```
 
 Their `*Char` consts, draw special-cases, AI special-cases, and rumble
-cinematics are all in source and still execute when those bosses are
-fought. **Don't remove boss code without explicit user direction.**
+cinematics are all still in the source and still execute when those
+bosses are fought. **Don't remove boss code without explicit user
+direction.**
 
 ---
 
@@ -381,8 +316,13 @@ fought. **Don't remove boss code without explicit user direction.**
 
 ### Small surgical edits
 
-Use the `Edit` tool with **multi-line string anchors** that include enough
-context to be uniquely matched. Don't rely on line numbers.
+Use the `Edit` tool with **multi-line string anchors** that include
+enough context to be uniquely matched. Don't rely on line numbers — they
+shift after every edit.
+
+The `index.html` file is large (~61 MB) so you can't `Read` it all in
+one go. But you CAN edit it via search-and-replace anchors. Always grep
+first to find your context.
 
 ### Large multi-site refactors
 
@@ -395,8 +335,8 @@ def replace_once(src, old, new, label):
     return src.replace(old, new, 1)
 ```
 
-Assertions catch when an anchor pattern doesn't match (e.g., because the
-source already changed) and abort cleanly before partial corruption.
+Assertions catch when an anchor doesn't match (e.g., because the source
+already changed) and abort cleanly before partial corruption.
 
 ### Multi-line block boundaries (nested braces)
 
@@ -427,60 +367,54 @@ def find_block_end(lines, start_line):
 
 **DO NOT** use non-greedy regex (`.*?`) with `re.S` for multi-line block
 matching — it miscounts when bodies have nested braces, prematurely
-matching at the first inner `}` and either leaving the file with
-unbalanced braces or eating sibling code.
+matching at the first inner `}`.
 
 ### Anti-patterns to avoid
 
-1. **Don't trust line numbers across sessions** — they shift after every
-   edit. Use string anchors.
+1. **Don't trust line numbers across sessions** — they shift. Use
+   string anchors.
 2. **Don't add new code paths that set `gameMode = 'campaign'` or
    `gameState = 'campaignSelect'`** — those branches were removed; setting
    them would crash on missing handlers.
 3. **Don't touch boss code in `practiceBossList` without explicit
    instructions** — boss-practice is live.
-4. **Don't edit `index.html` directly** — it's a build artifact. Edit
-   `src/all.js` and run `python3 src/build.py`.
-5. **Don't try to use the legacy `index copy.html`** — it's gone, and even
-   if it shows up locally (gitignore safety net), it has divergent embedded
-   base64 assets and shouldn't be the source of truth.
-6. **Don't commit asset PNGs / WAVs / MP3s under random folder names** —
-   stick to the `Assets/Fighters/<Name>/` and `Assets/Assists/<Name>/`
-   convention so the asset tree stays self-explanatory.
+4. **Don't add a separate `src/` folder, build script, or HTTP server
+   workflow back** — the project is intentionally a single-file game so
+   double-click works. The previous "rumbler-style split" was rolled
+   back; don't reinstate it without an explicit user request.
+5. **Don't introduce relative-path asset loads** like
+   `new Image(); img.src = 'Assets/foo.png'`. They break `file://` and
+   require a server. Always embed assets as base64 data URIs in the
+   sprite-data objects.
 
 ---
 
 ## Verification checklist before committing
 
 ```bash
-# 1. Source still builds
-python3 src/build.py
-
-# 2. Brace / paren / bracket balance
-python3 -c "src=open('src/all.js').read(); \
+# 1. Brace / paren / bracket balance
+python3 -c "src=open('index.html').read(); \
   print('{', src.count('{'), '} ', src.count('}'), \
         '|', '(', src.count('('), ') ', src.count(')'), \
         '|', '[', src.count('['), '] ', src.count(']'))"
 # Each pair should match.
 
-# 3. Smoke test that the served HTML still works
-(python3 -m http.server 8765 >/dev/null 2>&1 &)
-sleep 2
-curl -s -o /dev/null -w "HTML: %{http_code} (%{size_download} bytes)\n" \
-  http://localhost:8765/index.html
-pkill -f "http.server 8765"
+# 2. No leftover relative-path asset loads (would break file://)
+grep -oE "'Assets/[^']*'" index.html | head -5
+# (silence = clean — everything's embedded)
 
-# 4. Critical strings still present
+# 3. Critical strings still present
 for s in ARNAV THAD ZYLLEN MINH "KING ROLLER" JAYCE BORGUS ERICTHO imp11; do
-  grep -c "$s" index.html
+  cnt=$(grep -c "$s" index.html)
+  printf "  %-25s %d hits\n" "$s" "$cnt"
 done
 
-# 5. After commit + push, watch the deploy
-gh run list --repo Thad-the-Impaler/Morrill-Kombat --limit 1
+# 4. Double-click index.html in Finder. Title screen should appear with
+# the orange logo + menu. If it's a black screen, something broke.
 ```
 
-If any of these fail, **revert** (`git checkout src/all.js`) and re-attempt
-the edit with a smaller scope or different anchor strategy.
+If any of these fail, **revert** (`git checkout index.html`) and
+re-attempt the edit with a smaller scope or different anchor strategy.
 
 ---
 
@@ -492,19 +426,15 @@ the edit with a smaller scope or different anchor strategy.
    the GitHub repo. Run `brctl download Assets/` from the project root to
    pull them back to local disk.
 
-2. **`index copy.html` is dead**: the legacy 171 MB monolith that lived
-   alongside `src/all.js` during the early refactor is gone. If it
-   reappears in your working tree, it's stale — gitignored, never the
-   source of truth.
+2. **`index copy.html` is dead**: a legacy 171 MB monolith from the early
+   refactor. Gitignored. If it reappears in your working tree, it's
+   stale — never the source of truth.
 
-3. **Master-passkey code is `imp11`**: documented here in case it gets
-   asked about. Type it on the title screen or char-select to unlock
-   rumblePractice + mark all bosses defeated.
+3. **Master-passkey code is `imp11`**. Type on title or char-select.
+   Unlocks rumblePractice + marks all bosses defeated.
 
-4. **`gameMode === 'campaign'` is dead**: campaign mode was fully removed.
-   Don't add code paths gated on it; they won't fire. If you need a new
-   game mode, define a new `gameMode` value and route it through the
-   existing menu / setup chain.
+4. **`gameMode === 'campaign'` is dead**: campaign mode was removed.
+   Don't add code paths gated on it.
 
 5. **Don't bother with `secretCharOrder`, `secretCharHints`,
    `insertCharOrdered`** — all gone. There is no longer a "locked
@@ -518,33 +448,21 @@ the edit with a smaller scope or different anchor strategy.
 
 ## Recent history (for context drift)
 
-A condensed log of large-scale changes that might surprise you if you
-expect older state:
+- **Tier 1**: removed legacy 171 MB monolith, 11 unused stage music
+  tracks, `Logo1.png`, fixed cosmetic glitch.
+- **Tier 2 Phase 1**: trimmed portraits 55 → 24.
+- **Tier 2 Phase 2**: removed campaign data (115-line `campaigns`
+  object literal, rumbler functions, 3 campaign-only chars).
+- **Tier 2 Phase 3**: collapsed 24 secret-char defs to stubs.
+- **Tier 2 Phase 4**: deleted entire secret-char system (passkeys,
+  unlock-flash overlays, vars, `drawLockedCharPreview`,
+  `secretCharOrder`, `insertCharOrdered`).
+- **Tier 2 Phase 5**: collapsed 25 dead-sfx stubs, removed campaign
+  machinery + all `gameMode === 'campaign'` checks.
+- **Architecture rollback**: rolled back the rumbler-style src/
+  template + build pipeline. Re-embedded all assets back into a single
+  self-contained `index.html` so double-click in Finder works without
+  needing an HTTP server. GitHub Pages now serves directly from `main`
+  (no Actions workflow).
 
-- **Tier 1**: removed `index copy.html` (171 MB), 11 unused stage music
-  tracks (~42 MB), `Logo1.png`, fixed a stray `} else //` comment glitch.
-- **Tier 2 Phase 1**: trimmed `Assets/Portraits/` from 55 → 24 entries
-  (kept BAG, MANNEQUIN, DRONE + 21 bosses).
-- **Tier 2 Phase 2**: replaced `const campaigns = {...}` (115-line literal)
-  with `const campaigns = {};` empty stub. Removed `rumblerOpponents`,
-  `rumblerDifficulties`, `getRumblerLevels`, `generateRumblerFight`, and
-  3 campaign-only `*Char` consts (`campaignBojdoChar`,
-  `campaignBojdobojdoChar`, `theCountFinalChar`).
-- **Tier 2 Phase 3**: collapsed 24 secret-char consts (BOJDO, RUBBERMAN,
-  …, AETHER) to 1-line stubs. Emptied `secretCharHints` Map.
-- **Tier 2 Phase 4**: deleted the entire secret-char system —
-  per-char passkey handlers in charSelect, per-char unlock-flash
-  overlays, `*Unlocked / *CodeBuffer / *UnlockFlash` triplets,
-  `drawLockedCharPreview`, `secretCharOrder`, `insertCharOrdered`,
-  the showLockedChars Tab toggle. Slimmed `activateMasterPasskey` and
-  `isMasterPasskeyNeeded` to keep only rumblePractice + boss-defeat
-  bookkeeping.
-- **Tier 2 Phase 5**: collapsed 25 dead-sfx `new Audio()` stubs to a
-  shared `_deadSfx` no-op. Deleted `setupCampaignFight`,
-  `drawCampaignSelectScreen`, both `case 'campaignSelect'` handlers.
-  Removed all 22 inline `gameMode === 'campaign'` checks via
-  brace-depth tracking. Removed orphan campaign vars and
-  `campaignMusicOverride`.
-
-If you want to know the exact set of removals, `git log --oneline` since
-the initial commit shows the full sequence.
+`git log --oneline` shows the full sequence.

@@ -278,8 +278,6 @@ const secretLevelHints = {};
 
 const secretLevels = [];
 
-// Campaign-only levels (kept for reference)
-const campaignLevels = [];
 
 function getLevels() {
   const lvls = [...defaultLevels];
@@ -933,9 +931,7 @@ const printerBossChar = {
   maxHealth: 250
 };
 
-const campaigns = {};
 
-const campaignKeys = Object.keys(campaigns);
 // --- GAME STATE ---
 let gameState = 'title'; // title, charSelect, practiceTargetSelect, assistSelect, difficultySelect, levelSelect, fight, finishHim, victory
 let gameMode = 'cpu'; // cpu, practice
@@ -982,10 +978,6 @@ const FINISH_HIM_DURATION = 360; // 6 seconds at 60fps
 const femaleCharacters = new Set(['TORRENA', 'CORVIDA', 'TELATRINE', 'KILLA WATT', 'VORTICE', 'ERICTHO', 'SCALENA', 'DRYAD']);
 
 // Campaign state
-let campaignId = null;        // 'brawler', etc.
-let campaignFightIndex = 0;   // current fight (0-19)
-let campaignSelectCursor = 0; // cursor on campaign select screen
-let campaignSkipBuffer = '';  // buffer for IMPAL24 skip code
 
 // Test Your Might bonus state
 let testYourMightActive = false;
@@ -1327,49 +1319,59 @@ function stopFightMusic() {
   currentFightMusic = null;
 }
 
+// Shared no-op stub for SFX whose backing .wav was removed when the
+// owning character/assist left the active roster. Lookups that still
+// land here (in dead-code paths) call .play()/.pause()/.currentTime
+// and silently no-op rather than 404'ing or ReferenceError-ing.
+const _deadSfx = {
+  currentTime: 0,
+  volume: 0,
+  paused: true,
+  play() { return Promise.resolve(); },
+  pause() {},
+};
+
 // --- FIGHTING SOUND EFFECTS ---
 const sfx_jab = new Audio('Assets/Sound/sfx_jab.wav');
 const sfx_uppercut = new Audio('Assets/Sound/sfx_uppercut.wav');
 const sfx_kick = new Audio('Assets/Sound/sfx_kick.wav');
 const sfx_comboAttack = new Audio('Assets/Sound/sfx_comboAttack.wav');
 const sfx_assistShoot = new Audio('Assets/Sound/sfx_assistShoot.wav');
-const sfx_shadePunch = new Audio(); // asset removed — kept as no-op stub
-const sfx_shadeKick = new Audio(); // asset removed — kept as no-op stub
-const sfx_serpent = new Audio(); // asset removed — kept as no-op stub
-const sfx_sticker = new Audio(); // asset removed — kept as no-op stub
+const sfx_shadePunch = _deadSfx;
+const sfx_shadeKick = _deadSfx;
+const sfx_serpent = _deadSfx;
+const sfx_sticker = _deadSfx;
 
 const SFX_VOLUME = 0.5;
-[sfx_jab, sfx_uppercut, sfx_kick, sfx_comboAttack, sfx_assistShoot, sfx_shadePunch, sfx_shadeKick, sfx_serpent, sfx_sticker].forEach(s => s.volume = SFX_VOLUME);
+[sfx_jab, sfx_uppercut, sfx_kick, sfx_comboAttack, sfx_assistShoot].forEach(s => s.volume = SFX_VOLUME);
 
 function playSfx(sound) {
   sound.currentTime = 0;
   sound.play().catch(() => {});
 }
 // --- ABILITY SOUND EFFECTS ---
-const sfx_blazeKick = new Audio(); // asset removed — kept as no-op stub
-const sfx_boltStrike = new Audio(); // asset removed — kept as no-op stub
-const sfx_codePort = new Audio(); // asset removed — kept as no-op stub
-const sfx_earthquake = new Audio(); // asset removed — kept as no-op stub
-const sfx_flashFreeze = new Audio(); // asset removed — kept as no-op stub
-const sfx_glacierSlam = new Audio(); // asset removed — kept as no-op stub
-const sfx_hayExplosion = new Audio(); // asset removed — kept as no-op stub
-const sfx_infernoRush = new Audio(); // asset removed — kept as no-op stub
-const sfx_ironWall = new Audio(); // asset removed — kept as no-op stub
-const sfx_jayForm = new Audio(); // asset removed — kept as no-op stub
-const sfx_jazzDance = new Audio(); // asset removed — kept as no-op stub
-const sfx_phantomSlash = new Audio(); // asset removed — kept as no-op stub
-const sfx_rubberStretch = new Audio(); // asset removed — kept as no-op stub
-const sfx_shadowStep = new Audio(); // asset removed — kept as no-op stub
-const sfx_sizeShifting = new Audio(); // asset removed — kept as no-op stub
-const sfx_soulSwap = new Audio(); // asset removed — kept as no-op stub
-const sfx_thunderChain = new Audio(); // asset removed — kept as no-op stub
-const sfx_toxicBite = new Audio(); // asset removed — kept as no-op stub
-const sfx_venomBlast = new Audio(); // asset removed — kept as no-op stub
-const sfx_warpWalk = new Audio(); // asset removed — kept as no-op stub
-const sfx_waterPhase = new Audio(); // asset removed — kept as no-op stub
+const sfx_blazeKick = _deadSfx;
+const sfx_boltStrike = _deadSfx;
+const sfx_codePort = _deadSfx;
+const sfx_earthquake = _deadSfx;
+const sfx_flashFreeze = _deadSfx;
+const sfx_glacierSlam = _deadSfx;
+const sfx_hayExplosion = _deadSfx;
+const sfx_infernoRush = _deadSfx;
+const sfx_ironWall = _deadSfx;
+const sfx_jayForm = _deadSfx;
+const sfx_jazzDance = _deadSfx;
+const sfx_phantomSlash = _deadSfx;
+const sfx_rubberStretch = _deadSfx;
+const sfx_shadowStep = _deadSfx;
+const sfx_sizeShifting = _deadSfx;
+const sfx_soulSwap = _deadSfx;
+const sfx_thunderChain = _deadSfx;
+const sfx_toxicBite = _deadSfx;
+const sfx_venomBlast = _deadSfx;
+const sfx_warpWalk = _deadSfx;
+const sfx_waterPhase = _deadSfx;
 
-[sfx_blazeKick, sfx_boltStrike, sfx_codePort, sfx_earthquake, sfx_flashFreeze, sfx_glacierSlam, sfx_hayExplosion, sfx_infernoRush, sfx_ironWall, sfx_jayForm, sfx_jazzDance, sfx_phantomSlash, sfx_rubberStretch, sfx_shadowStep, sfx_sizeShifting, sfx_soulSwap, sfx_thunderChain, sfx_toxicBite, sfx_venomBlast, sfx_warpWalk, sfx_waterPhase].forEach(s => s.volume = SFX_VOLUME);
-sfx_sizeShifting.volume = 1.0;
 
 // Map combo names to their specific sound effects
 const comboSfxMap = {
@@ -3567,8 +3569,6 @@ function drawAssistSelectScreen() {
     ctx.fillText(`${selectedPlayer.name} - Practice Mode`, 480, 80);
   } else if (gameMode === 'bossPractice') {
     ctx.fillText(`${selectedPlayer.name} vs ${selectedCPU.name} - Boss Practice`, 480, 80);
-  } else if (gameMode === 'campaign') {
-    ctx.fillText('CAMPAIGN', 480, 80);
   } else if (selectingCPUAssist) {
     const pAssistName = selectedAssist.name;
     ctx.fillText(`${selectedPlayer.name} (${pAssistName}) vs ${selectedCPU.name}`, 480, 80);
@@ -3581,7 +3581,7 @@ function drawAssistSelectScreen() {
   ctx.textAlign = 'left';
   ctx.fillStyle = selectedPlayer.accent;
   ctx.fillText(selectedPlayer.name, 48, 34);
-  if (selectedCPU && gameMode !== 'campaign') {
+  if (selectedCPU) {
     drawPortraitIcon(selectedCPU.name, 930, 30, 22);
     ctx.font = '11px Arial';
     ctx.textAlign = 'right';
@@ -3823,24 +3823,18 @@ function drawDifficultySelectScreen() {
 
   ctx.font = '16px Arial';
   ctx.fillStyle = '#888';
-  if (gameMode === 'campaign') {
-    ctx.fillText('CAMPAIGN', 480, 80);
-  } else {
-    ctx.fillText(`${selectedPlayer.name} vs ${selectedCPU.name}`, 480, 80);
-  }
+  ctx.fillText(`${selectedPlayer.name} vs ${selectedCPU.name}`, 480, 80);
   // Player & CPU icons
   drawPortraitIcon(selectedPlayer.name, 30, 30, 22);
   ctx.font = '11px Arial';
   ctx.textAlign = 'left';
   ctx.fillStyle = selectedPlayer.accent;
   ctx.fillText(selectedPlayer.name, 48, 34);
-  if (gameMode !== 'campaign') {
-    drawPortraitIcon(selectedCPU.name, 930, 30, 22);
-    ctx.font = '11px Arial';
-    ctx.textAlign = 'right';
-    ctx.fillStyle = selectedCPU.accent;
-    ctx.fillText(selectedCPU.name, 912, 34);
-  }
+  drawPortraitIcon(selectedCPU.name, 930, 30, 22);
+  ctx.font = '11px Arial';
+  ctx.textAlign = 'right';
+  ctx.fillStyle = selectedCPU.accent;
+  ctx.fillText(selectedCPU.name, 912, 34);
 
   // Difficulty cards
   const startX = 480 - ((difficulties.length - 1) * 200) / 2;
@@ -4932,158 +4926,30 @@ function drawVictoryScreen() {
 
   ctx.textAlign = 'center';
 
-  if (gameMode === 'campaign' && testYourMightActive) {
-    // Bonus fight results — no standard winner text
-    ctx.font = 'bold 40px Arial';
-    ctx.fillStyle = '#ffcc00';
-    ctx.shadowColor = '#ff6600';
-    ctx.shadowBlur = 15;
-    ctx.fillText('TEST YOUR MIGHT', 480, 180);
-    ctx.shadowBlur = 0;
+  // Standard winner display
+  const winnerChar = winner === 'player' ? selectedPlayer : selectedCPU;
+  const label = winner === 'player' ? 'YOU WIN!' : 'CPU WINS!';
 
-    ctx.font = 'bold 56px Arial';
-    ctx.fillStyle = '#ffffff';
-    ctx.fillText(Math.floor(testYourMightDamage) + ' DAMAGE', 480, 260);
+  ctx.font = 'bold 64px Arial';
+  ctx.shadowColor = winnerChar.accent;
+  ctx.shadowBlur = 30;
+  ctx.fillStyle = winnerChar.accent;
+  ctx.fillText(label, 480, 220);
+  ctx.shadowBlur = 0;
 
-    const dmg = testYourMightDamage;
-    const rating = dmg >= 500 ? 'INCREDIBLE!' : dmg >= 300 ? 'IMPRESSIVE!' : dmg >= 150 ? 'NICE WORK!' : dmg >= 50 ? 'NOT BAD' : 'WEAK...';
-    const ratingColor = dmg >= 500 ? '#ff00ff' : dmg >= 300 ? '#ffcc00' : dmg >= 150 ? '#44ff44' : dmg >= 50 ? '#aaaaaa' : '#ff4444';
-    ctx.font = 'bold 28px Arial';
-    ctx.fillStyle = ratingColor;
-    ctx.fillText(rating, 480, 320);
+  ctx.font = 'bold 36px Arial';
+  ctx.fillStyle = winnerChar.color;
+  ctx.fillText(winnerChar.name, 480, 280);
 
-    ctx.font = 'bold 20px Arial';
-    ctx.fillStyle = '#ffcc00';
-    ctx.fillText('CAMPAIGN COMPLETE!', 480, 380);
-
-    ctx.font = '16px Arial';
-    ctx.fillStyle = '#888';
-    ctx.fillText('Press ENTER to return to title', 480, 420);
+  ctx.font = '20px Arial';
+  ctx.fillStyle = '#aaa';
+  if (gameMode === 'rumblePractice') {
+    ctx.fillText('Press ENTER to retry', 480, 380);
+    ctx.font = '14px Arial';
+    ctx.fillStyle = '#666';
+    ctx.fillText('Press ESC to return to title', 480, 410);
   } else {
-    // Standard winner display
-    const winnerChar = winner === 'player' ? selectedPlayer : selectedCPU;
-    const label = winner === 'player' ? 'YOU WIN!' : 'CPU WINS!';
-
-    ctx.font = 'bold 64px Arial';
-    ctx.shadowColor = winnerChar.accent;
-    ctx.shadowBlur = 30;
-    ctx.fillStyle = winnerChar.accent;
-    ctx.fillText(label, 480, 220);
-    ctx.shadowBlur = 0;
-
-    ctx.font = 'bold 36px Arial';
-    ctx.fillStyle = winnerChar.color;
-    ctx.fillText(winnerChar.name, 480, 280);
-
-    ctx.font = '20px Arial';
-    ctx.fillStyle = '#aaa';
-    if (gameMode === 'campaign') {
-      const campaign = campaigns[campaignId];
-      if (campaign && campaign.infinite) {
-        // Infinite mode — show win streak
-        const streak = campaignFightIndex + (winner === 'player' ? 1 : 0);
-        if (winner === 'player') {
-          ctx.font = 'bold 24px Arial';
-          ctx.fillStyle = '#ffcc00';
-          ctx.fillText('WIN STREAK: ' + streak, 480, 340);
-          // Show stage unlock notification
-          const justBeat = campaign.fights[campaignFightIndex];
-          if (justBeat && justBeat.unlocksTent) {
-            ctx.font = 'bold 16px Arial';
-            ctx.fillStyle = '#cc3333';
-            ctx.shadowColor = '#cc3333';
-            ctx.shadowBlur = 10;
-            ctx.fillText('NEW STAGE UNLOCKED: THE TENT', 480, 365);
-            ctx.shadowBlur = 0;
-            ctx.font = '18px Arial';
-            ctx.fillStyle = '#aaa';
-            ctx.fillText('Press ENTER for next fight', 480, 390);
-          } else {
-            ctx.font = '18px Arial';
-            ctx.fillStyle = '#aaa';
-            ctx.fillText('Press ENTER for next fight', 480, 375);
-          }
-        } else {
-          ctx.font = 'bold 24px Arial';
-          ctx.fillStyle = '#ff4444';
-          ctx.fillText('GAME OVER', 480, 340);
-          ctx.font = '20px Arial';
-          ctx.fillStyle = '#ffcc00';
-          ctx.fillText('FINAL STREAK: ' + streak, 480, 375);
-          ctx.font = '16px Arial';
-          ctx.fillStyle = '#888';
-          ctx.fillText('Press ENTER to return to title', 480, 405);
-        }
-        ctx.font = '14px Arial';
-        ctx.fillStyle = '#666';
-        ctx.fillText('Press ESC to return to title', 480, 435);
-      } else if (winner === 'player') {
-        const nextIdx = campaignFightIndex + 1;
-        // Don't count bonus fights in the progress display
-        const realFights = campaign.fights.filter(f => !f.isBonus);
-        const trueCount = realFights.length;
-        // Hide true count until reveal threshold is reached
-        const realCount = (campaign.displayFightCount && campaignFightIndex < campaign.revealAtFight) ? campaign.displayFightCount : trueCount;
-        const nextFight = campaign.fights[nextIdx];
-        if (nextIdx < campaign.fights.length && nextFight) {
-          if (nextFight.isBonus) {
-            ctx.fillText('Press ENTER for bonus challenge', 480, 360);
-          } else {
-            ctx.fillText('Press ENTER for next fight', 480, 360);
-          }
-          ctx.font = '16px Arial';
-          ctx.fillStyle = '#888';
-          ctx.fillText('Fight ' + Math.min(campaignFightIndex + 1, realCount) + ' of ' + realCount + ' complete', 480, 395);
-        } else {
-          ctx.fillStyle = '#ffcc00';
-          ctx.fillText('CAMPAIGN COMPLETE!', 480, 360);
-          // Stage unlock notification
-          if (campaignId === 'warrior') {
-            ctx.font = 'bold 16px Arial';
-            ctx.fillStyle = '#ff6b35';
-            ctx.shadowColor = '#ff6b35';
-            ctx.shadowBlur = 10;
-            ctx.fillText('NEW STAGE UNLOCKED: THE DUST', 480, 390);
-            ctx.shadowBlur = 0;
-            ctx.font = '16px Arial';
-            ctx.fillStyle = '#888';
-            ctx.fillText('Press ENTER to return to title', 480, 415);
-          } else if (campaignId === 'champion') {
-            ctx.font = 'bold 16px Arial';
-            ctx.fillStyle = '#aa44ff';
-            ctx.shadowColor = '#aa44ff';
-            ctx.shadowBlur = 10;
-            ctx.fillText('NEW STAGE UNLOCKED: THE PULP', 480, 390);
-            ctx.shadowBlur = 0;
-            ctx.font = '16px Arial';
-            ctx.fillStyle = '#888';
-            ctx.fillText('Press ENTER to return to title', 480, 415);
-          } else {
-            ctx.font = '16px Arial';
-            ctx.fillStyle = '#888';
-            ctx.fillText('Press ENTER to return to title', 480, 395);
-          }
-        }
-      } else {
-        ctx.fillStyle = '#ff4444';
-        ctx.fillText('CAMPAIGN OVER', 480, 360);
-        ctx.font = '16px Arial';
-        ctx.fillStyle = '#888';
-        ctx.fillText('Press ENTER to return to title', 480, 395);
-      }
-      if (!campaign.infinite) {
-        ctx.font = '14px Arial';
-        ctx.fillStyle = '#666';
-        ctx.fillText('Press ESC to return to title', 480, 430);
-      }
-    } else if (gameMode === 'rumblePractice') {
-      ctx.fillText('Press ENTER to retry', 480, 380);
-      ctx.font = '14px Arial';
-      ctx.fillStyle = '#666';
-      ctx.fillText('Press ESC to return to title', 480, 410);
-    } else {
-      ctx.fillText('Press ENTER to return to title', 480, 380);
-    }
+    ctx.fillText('Press ENTER to return to title', 480, 380);
   }
 }
 
@@ -5098,24 +4964,18 @@ function drawLevelSelectScreen() {
 
   ctx.font = '16px Arial';
   ctx.fillStyle = '#888';
-  if (gameMode === 'campaign') {
-    ctx.fillText('CAMPAIGN', 480, 80);
-  } else {
-    ctx.fillText(`${selectedPlayer.name} vs ${selectedCPU.name}${cpuDifficulty ? '  |  ' + cpuDifficulty.name : ''}`, 480, 80);
-  }
+  ctx.fillText(`${selectedPlayer.name} vs ${selectedCPU.name}${cpuDifficulty ? '  |  ' + cpuDifficulty.name : ''}`, 480, 80);
   // Player & CPU icons
   drawPortraitIcon(selectedPlayer.name, 30, 30, 22);
   ctx.font = '11px Arial';
   ctx.textAlign = 'left';
   ctx.fillStyle = selectedPlayer.accent;
   ctx.fillText(selectedPlayer.name, 48, 34);
-  if (gameMode !== 'campaign') {
-    drawPortraitIcon(selectedCPU.name, 930, 30, 22);
-    ctx.font = '11px Arial';
-    ctx.textAlign = 'right';
-    ctx.fillStyle = selectedCPU.accent;
-    ctx.fillText(selectedCPU.name, 912, 34);
-  }
+  drawPortraitIcon(selectedCPU.name, 930, 30, 22);
+  ctx.font = '11px Arial';
+  ctx.textAlign = 'right';
+  ctx.fillStyle = selectedCPU.accent;
+  ctx.fillText(selectedCPU.name, 912, 34);
 
   const lvls = getLevels();
   // When Tab toggled, show locked secret levels in the grid as "?" cards
@@ -5757,44 +5617,8 @@ function drawVersusScreen() {
     ctx.restore();
 
     // Infinite mode fight number
-    if (gameMode === 'campaign' && campaigns[campaignId] && campaigns[campaignId].infinite) {
-      ctx.save();
-      ctx.globalAlpha = vsEase;
-      ctx.font = 'bold 20px Arial';
-      ctx.textAlign = 'center';
-      ctx.fillStyle = '#ffcc00';
-      ctx.shadowColor = '#ff8800';
-      ctx.shadowBlur = 8;
-      ctx.fillText('FIGHT #' + (campaignFightIndex + 1), splitX, H / 2 + 50);
-      ctx.shadowBlur = 0;
-      ctx.restore();
-    }
     // "Campaigner battle" label for boss fights (skip in infinite mode — Fight # already shows)
-    if (gameMode === 'campaign' && selectedCPU && selectedCPU.isBoss && !(campaigns[campaignId] && campaigns[campaignId].infinite)) {
-      ctx.save();
-      ctx.globalAlpha = vsEase;
-      ctx.font = 'bold 18px Arial';
-      ctx.textAlign = 'center';
-      ctx.fillStyle = '#ff4444';
-      ctx.shadowColor = '#ff0000';
-      ctx.shadowBlur = 10;
-      ctx.fillText('CAMPAIGNER BATTLE', splitX, H / 2 + 50);
-      ctx.shadowBlur = 0;
-      ctx.restore();
-    }
     // "Bonus Challenge" label for bonus fights
-    if (gameMode === 'campaign' && testYourMightActive) {
-      ctx.save();
-      ctx.globalAlpha = vsEase;
-      ctx.font = 'bold 20px Arial';
-      ctx.textAlign = 'center';
-      ctx.fillStyle = '#ffcc00';
-      ctx.shadowColor = '#ff6600';
-      ctx.shadowBlur = 10;
-      ctx.fillText('BONUS CHALLENGE: TEST YOUR MIGHT', splitX, H / 2 + 50);
-      ctx.shadowBlur = 0;
-      ctx.restore();
-    }
   }
 
   // --- Flash transition at the end ---
@@ -5807,100 +5631,6 @@ function drawVersusScreen() {
   }
 }
 
-function drawCampaignSelectScreen() {
-  // Background
-  const grad = ctx.createLinearGradient(0, 0, 0, 540);
-  grad.addColorStop(0, '#000000');
-  grad.addColorStop(0.5, '#1a0a00');
-  grad.addColorStop(1, '#0a0500');
-  ctx.fillStyle = grad;
-  ctx.fillRect(0, 0, 960, 540);
-
-  // Title
-  ctx.font = 'bold 42px Arial';
-  ctx.textAlign = 'center';
-  ctx.fillStyle = '#ff6b35';
-  ctx.fillText('SELECT CAMPAIGN', 480, 80);
-
-  // Decorative line
-  ctx.strokeStyle = '#ff450066';
-  ctx.lineWidth = 1;
-  ctx.beginPath();
-  ctx.moveTo(250, 100);
-  ctx.lineTo(710, 100);
-  ctx.stroke();
-
-  // Campaign cards
-  const keys = campaignKeys;
-  for (let i = 0; i < keys.length; i++) {
-    const campaign = campaigns[keys[i]];
-    const selected = i === campaignSelectCursor;
-    const cardH = 68;
-    const y = 120 + i * (cardH + 10);
-    const pulse = selected ? Math.sin(Date.now() * 0.004) * 0.5 + 0.5 : 0;
-
-    // Card background
-    ctx.fillStyle = selected ? 'rgba(255,69,0,0.15)' : 'rgba(255,255,255,0.03)';
-    ctx.beginPath();
-    ctx.roundRect(180, y, 600, cardH, 10);
-    ctx.fill();
-
-    // Card border
-    ctx.strokeStyle = selected
-      ? `rgba(255,${150 + pulse * 105},0,${0.6 + pulse * 0.4})`
-      : 'rgba(255,255,255,0.08)';
-    ctx.lineWidth = selected ? 2 : 1;
-    ctx.beginPath();
-    ctx.roundRect(180, y, 600, cardH, 10);
-    ctx.stroke();
-
-    // Campaign name
-    ctx.font = 'bold 28px Arial';
-    ctx.textAlign = 'left';
-    ctx.fillStyle = selected ? `rgba(255,${150 + pulse * 105},0,1)` : '#666';
-    ctx.fillText(campaign.name, 210, y + 28);
-
-    // Description
-    ctx.font = '13px Arial';
-    ctx.fillStyle = selected ? '#aaa' : '#555';
-    ctx.fillText(campaign.desc, 210, y + 46);
-
-    // Fight count (respect hidden count, infinite shows ∞)
-    ctx.font = '14px Arial';
-    ctx.textAlign = 'right';
-    ctx.fillStyle = selected ? '#888' : '#444';
-    if (campaign.infinite) {
-      ctx.fillText('∞ fights', 760, y + 28);
-    } else {
-      const realTotal = campaign.fights.filter(f => !f.isBonus).length;
-      const totalFights = campaign.displayFightCount || realTotal;
-      ctx.fillText(totalFights + ' fights', 760, y + 28);
-    }
-
-    // Selection arrow
-    if (selected) {
-      ctx.font = 'bold 20px Arial';
-      ctx.textAlign = 'right';
-      ctx.fillStyle = '#ff6b35';
-      ctx.fillText('>', 200, y + 30);
-    }
-  }
-
-  // Footer
-  ctx.font = '14px Arial';
-  ctx.textAlign = 'center';
-  ctx.fillStyle = '#555';
-  ctx.fillText('Press ENTER to begin  |  ESC to go back', 480, 480);
-
-  // Show selected player + assist info
-  if (selectedPlayer) {
-    ctx.font = '14px Arial';
-    ctx.textAlign = 'center';
-    ctx.fillStyle = '#666';
-    const assistName = selectedAssist ? selectedAssist.name : 'None';
-    ctx.fillText('Fighter: ' + selectedPlayer.name + '  |  Assist: ' + assistName, 480, 510);
-  }
-}
 function drawBackground() {
   const level = selectedLevel ? selectedLevel.name : 'CLASSIC';
   const t = Date.now();
@@ -22375,10 +22105,6 @@ function handleKeyPress(key, isRepeat) {
               } else if (gameMode === 'practice') {
                 gameState = 'practiceTargetSelect';
                 practiceTargetCursor = 0;
-              } else if (gameMode === 'campaign') {
-                gameState = 'assistSelect';
-                assistCursor = 0;
-                selectingCPUAssist = false;
               } else {
                 selectingCPU = true;
                 cpuSelectCursor = (charSelectCursor + 1) % charSlots;
@@ -22394,10 +22120,6 @@ function handleKeyPress(key, isRepeat) {
             } else if (gameMode === 'practice') {
               gameState = 'practiceTargetSelect';
               practiceTargetCursor = 0;
-            } else if (gameMode === 'campaign') {
-              gameState = 'assistSelect';
-              assistCursor = 0;
-              selectingCPUAssist = false;
             } else {
               selectingCPU = true;
               cpuSelectCursor = (charSelectCursor + 1) % charSlots;
@@ -22550,9 +22272,6 @@ function handleKeyPress(key, isRepeat) {
                 cpuAssistIndex = Math.floor(Math.random() * assists.length);
                 levelSelectCursor = 0;
                 gameState = 'levelSelect';
-              } else if (gameMode === 'campaign') {
-                campaignSelectCursor = 0;
-                gameState = 'campaignSelect';
               } else {
                 selectingCPUAssist = true;
                 cpuAssistCursor = 0;
@@ -22564,9 +22283,6 @@ function handleKeyPress(key, isRepeat) {
               cpuAssistIndex = Math.floor(Math.random() * assists.length);
               levelSelectCursor = 0;
               gameState = 'levelSelect';
-            } else if (gameMode === 'campaign') {
-              campaignSelectCursor = 0;
-              gameState = 'campaignSelect';
             } else {
               selectingCPUAssist = true;
               cpuAssistCursor = 0;
@@ -22579,10 +22295,6 @@ function handleKeyPress(key, isRepeat) {
           } else if (gameMode === 'practice') {
             gameState = 'practiceTargetSelect';
             practiceTargetCursor = 0;
-          } else if (gameMode === 'campaign') {
-            gameState = 'charSelect';
-            charSelectScroll = 0;
-            selectingCPU = false;
           } else {
             gameState = 'charSelect';
             charSelectScroll = 0;
@@ -22864,31 +22576,9 @@ function handleKeyPress(key, isRepeat) {
       break;
     }
 
-    case 'campaignSelect': {
-      const cKeys = campaignKeys;
-      if (key === 'ArrowUp' || key === 'w' || key === 'W') campaignSelectCursor = (campaignSelectCursor - 1 + cKeys.length) % cKeys.length;
-      if (key === 'ArrowDown' || key === 's' || key === 'S') campaignSelectCursor = (campaignSelectCursor + 1) % cKeys.length;
-      if (key === 'Enter' || key === ' ') {
-        campaignId = cKeys[campaignSelectCursor];
-        campaignFightIndex = 0;
-        setupCampaignFight(0);
-      }
-      if (key === 'Escape' || key === 'Backspace') {
-        gameState = 'assistSelect';
-        selectingCPUAssist = false;
-      }
-      break;
-    }
-
     case 'versus':
       if (key === 'Escape') {
-        if (gameMode === 'campaign') {
-          gameState = 'campaignSelect';
-          stopFightMusic();
-          playTitleMusic();
-        } else {
-          gameState = 'levelSelect';
-        }
+        gameState = 'levelSelect';
       }
       break;
 
@@ -22901,29 +22591,6 @@ function handleKeyPress(key, isRepeat) {
         playTitleMusic();
       }
       // Campaign skip code: IMPAL24
-      if (gameMode === 'campaign' && key.length === 1) {
-        if (!campaignSkipBuffer) campaignSkipBuffer = '';
-        campaignSkipBuffer += key.toUpperCase();
-        if (campaignSkipBuffer.length > 10) campaignSkipBuffer = campaignSkipBuffer.slice(-10);
-        if (campaignSkipBuffer.includes('IMPAL24')) {
-          campaignSkipBuffer = '';
-          resetRumbleState();
-          winner = null;
-          paused = false;
-          rumbleActive = false;
-          campaignFightIndex++;
-          const campaign = campaigns[campaignId];
-          if (campaign.infinite || (campaignFightIndex < campaign.fights.length && campaign.fights[campaignFightIndex] !== null)) {
-            setupCampaignFight(campaignFightIndex);
-          } else {
-            gameState = 'title';
-            paused = false;
-            stopFightMusic();
-            playTitleMusic();
-          }
-          break; // Stop processing this key event
-        }
-      }
       // Corvida: detect double-tap jump for jay transform
       if ((key === 'ArrowUp' || key === 'w' || key === 'W') && player && player.char.isCorvida && !player.isJay) {
         if (frameCount - player.lastJumpPress < 20) {
@@ -22970,32 +22637,6 @@ function handleKeyPress(key, isRepeat) {
         resetRumbleState();
       }
       // Campaign skip code also works during finishHim
-      if (gameMode === 'campaign' && key.length === 1) {
-        if (!campaignSkipBuffer) campaignSkipBuffer = '';
-        campaignSkipBuffer += key.toUpperCase();
-        if (campaignSkipBuffer.length > 10) campaignSkipBuffer = campaignSkipBuffer.slice(-10);
-        if (campaignSkipBuffer.includes('IMPAL24')) {
-          campaignSkipBuffer = '';
-          resetRumbleState();
-          winner = null;
-          paused = false;
-          rumbleActive = false;
-          campaignFightIndex++;
-          const campaign = campaigns[campaignId];
-          if (campaignFightIndex < campaign.fights.length && campaign.fights[campaignFightIndex] !== null) {
-            setupCampaignFight(campaignFightIndex);
-          } else {
-            // Campaign complete — unlock rewards
-            if (campaignId === 'warrior') dustUnlocked = true;
-            if (campaignId === 'champion') pulpUnlocked = true;
-            gameState = 'title';
-            paused = false;
-            stopFightMusic();
-            playTitleMusic();
-          }
-          break;
-        }
-      }
       // Rumble code input (only when not paused and no rumble active)
       if (!paused && !rumbleActive && winner === 'player') {
         if (key.length === 1) {
@@ -23029,60 +22670,13 @@ function handleKeyPress(key, isRepeat) {
           startRumblePractice();
           break;
         }
-        if (gameMode === 'campaign') {
-          resetRumbleState();
-          if (winner === 'player') {
-            // Track defeated boss + special unlocks
-            const campaign = campaigns[campaignId];
-            const justBeat = campaign.fights[campaignFightIndex];
-            if (justBeat && justBeat.isBoss && typeof justBeat.opponent === 'object') {
-              defeatedBosses[justBeat.opponent.name] = true;
-            }
-            if (justBeat && justBeat.unlocksTent) tentUnlocked = true;
-            // Advance to next fight
-            campaignFightIndex++;
-            if (campaign.infinite || (campaignFightIndex < campaign.fights.length && campaign.fights[campaignFightIndex] !== null)) {
-              setupCampaignFight(campaignFightIndex);
-            } else {
-              // Campaign complete or no more fights — unlock rewards
-              if (campaignId === 'warrior') dustUnlocked = true;
-              if (campaignId === 'champion') pulpUnlocked = true;
-              gameState = 'title';
-              paused = false;
-              testYourMightActive = false;
-              playTitleMusic();
-            }
-          } else {
-            // Player lost — campaign over
-            gameState = 'title';
-            paused = false;
-            testYourMightActive = false;
-            playTitleMusic();
-          }
-          break;
-        }
         gameState = 'title';
         paused = false;
         playTitleMusic();
         resetRumbleState();
       }
-      if ((key === 'Escape' || key === 'Backspace') && (gameMode === 'rumblePractice' || gameMode === 'campaign')) {
+      if ((key === 'Escape' || key === 'Backspace') && gameMode === 'rumblePractice') {
         // Apply any pending unlocks before leaving
-        if (gameMode === 'campaign' && winner === 'player') {
-          const campaign = campaigns[campaignId];
-          const justBeat = campaign && campaign.fights[campaignFightIndex];
-          if (justBeat && justBeat.unlocksTent) tentUnlocked = true;
-          if (justBeat && justBeat.isBoss && typeof justBeat.opponent === 'object') {
-            defeatedBosses[justBeat.opponent.name] = true;
-          }
-          // Campaign completion rewards (only if this was the last fight)
-          const nextIdx = campaignFightIndex + 1;
-          const isComplete = !campaign.infinite && (nextIdx >= campaign.fights.length || !campaign.fights[nextIdx]);
-          if (isComplete) {
-            if (campaignId === 'warrior') dustUnlocked = true;
-            if (campaignId === 'champion') pulpUnlocked = true;
-          }
-        }
         gameState = 'title';
         paused = false;
         testYourMightActive = false;
@@ -23093,79 +22687,14 @@ function handleKeyPress(key, isRepeat) {
   }
 }
 
-let campaignMusicOverride = null;
+
 
 function startVersusScreen() {
   versusTimer = 0;
   gameState = 'versus';
   stopTitleMusic();
-  // The Count always gets his theme, regardless of level
-  if (selectedCPU && selectedCPU.isTheCount && !campaignMusicOverride) {
-    campaignMusicOverride = 'THE COUNT';
-  }
-  const musicKey = campaignMusicOverride || (selectedLevel ? selectedLevel.name : 'CLASSIC');
+  const musicKey = selectedLevel ? selectedLevel.name : 'CLASSIC';
   playFightMusic(musicKey);
-  campaignMusicOverride = null;
-}
-
-function setupCampaignFight(index) {
-  const campaign = campaigns[campaignId];
-
-  // Infinite mode: generate a random fight
-  let fight;
-  if (campaign.infinite) {
-    fight = generateRumblerFight(index);
-    // Store it so victory screen can reference it
-    campaign.fights[index] = fight;
-  } else {
-    fight = campaign.fights[index];
-  }
-  if (!fight) return;
-
-  // Resolve opponent
-  if (typeof fight.opponent === 'string') {
-    selectedCPU = characters.find(c => c.name === fight.opponent);
-  } else {
-    selectedCPU = fight.opponent; // boss or special character object
-  }
-
-  // Resolve difficulty (case-insensitive)
-  const fightDiff = fight.difficulty.toUpperCase();
-  cpuDifficulty = difficulties.find(d => d.name === fightDiff) || difficulties[0];
-
-  // Resolve level
-  selectedLevel = defaultLevels.find(l => l.name === fight.level)
-    || secretLevels.find(l => l.name === fight.level)
-    || campaignLevels.find(l => l.name === fight.level)
-    || defaultLevels[0];
-
-  // Random CPU assist
-  cpuAssistIndex = Math.floor(Math.random() * assists.length);
-
-  // Set up bonus fight state
-  if (fight.isBonus && fight.bonusType === 'testYourMight') {
-    testYourMightActive = true;
-    testYourMightMaxTime = fight.bonusTime * 60; // seconds to frames
-    testYourMightTimer = testYourMightMaxTime;
-    testYourMightDamage = 0;
-  } else {
-    testYourMightActive = false;
-  }
-
-  // Printer Boss secret phase
-  if (fight.isPrinterBoss) {
-    printerBossPhase = 0; // starts as TYM fake
-    printerBossTimer = 0;
-    printerBossInkSplats = [];
-    printerBossPapers = [];
-  } else {
-    printerBossPhase = -1; // not a printer boss fight
-  }
-
-  // Music override for specific fights
-  campaignMusicOverride = fight.music || null;
-
-  startVersusScreen();
 }
 
 function startRumblePractice() {
@@ -27908,10 +27437,6 @@ function draw() {
 
     case 'levelSelect':
       drawLevelSelectScreen();
-      break;
-
-    case 'campaignSelect':
-      drawCampaignSelectScreen();
       break;
 
     case 'versus':

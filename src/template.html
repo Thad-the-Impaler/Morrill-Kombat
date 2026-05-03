@@ -1,4 +1,19 @@
 <!DOCTYPE html>
+<!--
+  This file is a BUILD INPUT, not a playable page.
+
+  src/build.py concatenates this file with src/all.js (and a closing
+  </script></body></html> tail) to produce ../index.html, which is the
+  actual game.
+
+  Opening this file directly will show a black screen because the JS
+  body is missing.
+
+  To play the game locally:
+    * double-click play.command in the project root, OR
+    * run `python3 src/build.py` then `python3 -m http.server 8765` and
+      visit http://localhost:8765/
+-->
 <html lang="en">
 <head>
 <meta charset="UTF-8">

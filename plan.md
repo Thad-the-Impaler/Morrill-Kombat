@@ -22,6 +22,51 @@ loaded from disk via relative paths.
 
 ---
 
+## What file is what (read this first if confused)
+
+There are three HTML-shaped things in the project, and they are NOT
+interchangeable. The most common confusion is opening the wrong one
+locally and seeing a broken page.
+
+| File | What is it | Open it? |
+|---|---|---|
+| `src/template.html` | A **build input** — only the HTML head + opening `<script>`. No game code. Concatenated with `src/all.js` by `build.py` to produce `index.html`. | **No** — just a black screen. |
+| `index.html` (project root) | The **build artifact** — produced by `python3 src/build.py`. Has the full game inline. Gitignored. | Only via HTTP, not via `file://`. See below. |
+| `https://thad-the-impaler.github.io/Morrill-Kombat/` | The **deployed site** — built by GH Actions on every push to `main`, served over HTTPS by GitHub Pages. | Yes, this just works. |
+
+### Why `file://` doesn't work
+
+The game loads sprite PNGs and audio via relative paths
+(`Assets/Fighters/Arnav/ArnStationary.PNG`, etc.). When you double-click
+`index.html` in Finder, the browser loads it via `file://`, and modern
+browsers **refuse to fetch other files from disk** when the page itself
+came from disk — security sandbox. Every sprite load fails silently,
+every `new Audio(...)` fails, and you get a black canvas with no art.
+
+Serving the same file over HTTP (even `localhost`) bypasses the
+sandbox. That's what GitHub Pages does, and that's what `play.command`
+does locally.
+
+### How to play locally
+
+**Easiest**: double-click `play.command` in the project root. It
+rebuilds `index.html`, starts a local HTTP server on port 8765, and
+opens the game in your browser. Press Ctrl+C in the Terminal window
+when done.
+
+**Manual equivalent**:
+```bash
+python3 src/build.py
+python3 -m http.server 8765
+# then visit http://localhost:8765/
+```
+
+**If the deployed Pages site is enough**: just `git push`. The Actions
+workflow rebuilds and deploys in ~30s, and you can play it from any
+browser at the live URL.
+
+---
+
 ## Repo layout
 
 ```
